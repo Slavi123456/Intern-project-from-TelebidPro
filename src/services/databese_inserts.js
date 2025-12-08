@@ -13,6 +13,8 @@ export { bulk_inserts_from_json};
 
 dotenv.config();
 
+export {insert_into_table}
+
 // const safe_insert_into_table = withErrorHandling(insert_into_table, {notRethrow: true});
 const safe_insert_into_table = withErrorHandling(insert_into_table);
 

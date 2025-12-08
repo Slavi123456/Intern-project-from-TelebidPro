@@ -9,7 +9,7 @@ import client from "../config/db.js"
 export { safe_get_village_values, get_village_rows_count, get_villages_info};
 
 //Somehow to be exported only on test environment
-export { get_ids_from_queries }
+export { get_ids_from_queries, get_ids_from_text, get_village_values}
 
 dotenv.config();
 

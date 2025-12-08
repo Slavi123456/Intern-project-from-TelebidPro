@@ -21,3 +21,5 @@ server.on("clientError", (err, socket) => {
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+export {server};

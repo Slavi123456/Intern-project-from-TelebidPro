@@ -19,6 +19,7 @@ async function serve_static_files(req, res, folder) {
     const ext = path.extname(filePath);
     const contentType = mimeTypes[ext] || "application/octet-stream";
 
+    console.log(filePath);
     // console.log(urlPath, "\n", filePath, "\n", ext, "\n", contentType);
     const data = await fs.readFile(filePath);
     res.writeHead(200, { "Content-Type": contentType });
