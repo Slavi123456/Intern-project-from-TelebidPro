@@ -4,3 +4,4 @@ src/data/database/tryout.sql
 .env
 node_modules
 public/tryout.html
+coverage/
