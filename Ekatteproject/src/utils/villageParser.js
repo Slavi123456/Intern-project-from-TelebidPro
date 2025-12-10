@@ -1,4 +1,4 @@
-import { validateMany } from "../utils/validation.js";
+import { validateMany } from "./validation.js";
 import dotenv from 'dotenv';
 export {parse_names_from_village_text};
 
