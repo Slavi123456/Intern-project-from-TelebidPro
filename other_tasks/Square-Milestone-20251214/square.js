@@ -17,13 +17,13 @@ function square(A) {
       x1 = i;
       y2 = y;
       let len = Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
-      console.log(x1, y1, " - ", x2, y2, "with len ", len);
+      // console.log(x1, y1, " - ", x2, y2, "with len ", len);
       if (Number.isInteger(len)) {
         countWholeLen++;
         maxLen = Math.max(len, maxLen);
       }
     }
-    console.log(" ");
+    // console.log(" ");
   }
   console.log(maxLen, countWholeLen);
 }
