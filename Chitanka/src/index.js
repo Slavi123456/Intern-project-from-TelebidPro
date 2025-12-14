@@ -7,23 +7,26 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+console.log(__filename);
+console.log(__dirname);
+
 fetchPage();
 
 async function fetchPage() {
     const baseUlr = "https://chitanka.info/book/12011-magazinyt";
 
     try {
-        const response = await axios.get(baseUlr);
-        const html = response.data;
+        // const response = await axios.get(baseUlr);
+        // const html = response.data;
         
-        console.log("Page downloaded!");
-        console.log(html.substring(0, 200));
+        // console.log("Page downloaded!");
+        // console.log(html.substring(0, 200));
         
-        const filePath = path.join(__dirname, "page.html");
-        await fs.writeFile(filePath, html, "utf8");
-        console.log("Saved to", filePath);
+        // const filePath = path.join(__dirname, "page.html");
+        // await fs.writeFile(filePath, html, "utf8");
+        // console.log("Saved to", filePath);
         
-        // const html = await readFile("", "page.html");
+        const html = await readFile("", "page.html");
         const $ = cheerio.load(html);
 
         ///////////////////////////////
@@ -55,13 +58,15 @@ async function fetchPage() {
         const fullUrl = "https://chitanka.info" + txtLink;
         console.log("TXT ZIP URL:", fullUrl);
 
-        await downloadZip(fullUrl, "book.zip");
+        const filePath = path.join(__dirname, "country");
+        const zipPath = path.join(filePath, "book.zip");
+        await downloadZip(fullUrl, zipPath);
 
         //Unzipping
-        unzipFile("book.zip", "./");
+        unzipFile(zipPath, filePath);
 
         //Reading the unzipped .txt file
-        const text = await readBookText("./");
+        const text = await readBookText(filePath);
         console.log(text);
 
     } catch (error) {
