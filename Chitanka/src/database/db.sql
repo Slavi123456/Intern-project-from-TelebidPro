@@ -14,10 +14,14 @@ CREATE TABLE authors (
 
 CREATE TABLE author_stats (
     author_id INT PRIMARY KEY REFERENCES authors(id),
-    unique_words INT NOT NULL,
+    unique_words_id INT NOT NULL REFERENCES unique_words(id),
     avg_words_per_sentence NUMERIC NOT NULL
 );
 
+CREATE TABLE unique_words (
+    id INT PRIMARY KEY,
+    word TEXT
+);
 
 CREATE TABLE books (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -31,6 +35,8 @@ CREATE TABLE book_stats (
     book_id INT PRIMARY KEY REFERENCES books(id),
     unique_words INT NOT NULL
 );
+
+
 
 
 

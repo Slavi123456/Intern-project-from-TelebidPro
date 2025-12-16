@@ -1,3 +1,6 @@
 node_modules/
 .env
 tryout.js
+READMEtry.md
+src/tryout.sql
+books/
