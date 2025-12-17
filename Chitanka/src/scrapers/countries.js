@@ -1,13 +1,16 @@
-async function scrapeAuthorCountries() {
-  const baseUlr = "https://chitanka.info/authors";
+import { fetchPage } from "../services/website_fetch.js";
+import { extractCountries } from "../extractors/countries.js";
+
+export {scrapeAuthorCountries};
+
+// const baseUlr = "https://chitanka.info/authors";
+async function scrapeAuthorCountries(baseUlr) {
   try {
     const html = await fetchPage(baseUlr);
 
     const countriesInfo = extractCountries(html);
-    console.log(countriesInfo);
-    const countriesNames = countriesInfo.map(item => item.country);
-    await bulkCreateDirectory(countriesNames);
-
+    
+    return countriesInfo;
   } catch (error) {
     console.error("Error fetching page:", error.message);
   }

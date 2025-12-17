@@ -10,7 +10,6 @@ INSERT INTO unique_words(word) VALUES (:words_to_insert);
 
 COMMIT;
 
-
 CREATE OR REPLACE FUNCTION toggle_unique_words(words TEXT[])
 RETURNS void
 LANGUAGE plpgsql

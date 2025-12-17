@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import * as cheerio from "cheerio";
 import path from "path";
 
+export {extractBookInfo, bulkReadBookText, printTexts,readBookText};
 
 function extractBookInfo(html) {
   const $ = cheerio.load(html);
@@ -21,6 +22,15 @@ function extractBookInfo(html) {
   });
 
   return results;
+}
+
+
+async function bulkReadBookText(folders) {
+  let bookText = [];
+  for (const folder of folders) {
+    bookText.push(await readBookText(folder));
+  }
+  return bookText;
 }
 
 // const text = await readBookText("./");
@@ -50,11 +60,4 @@ function printTexts(texts) {
     for (const text of texts) {
       console.log(text.substring(0, 100));
     }
-}
-async function bulkReadBookText(folders) {
-  let bookText = [];
-  for (const folder of folders) {
-    bookText.push(await readBookText(folder));
-  }
-  return bookText;
 }

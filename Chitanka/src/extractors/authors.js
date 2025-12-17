@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio";
-import { __scrappedFileDir, __websiteUrl } from "./paths.js";
+
+export {extractAuthors};
 
 function extractAuthors(html) {
   const $ = cheerio.load(html);
@@ -9,7 +10,7 @@ function extractAuthors(html) {
     const author = $(a).text().trim();
     const href = $(a).attr("href");
 
-    console.log(author, href);
+    // console.log(author, href);
 
     result.push({
       author,

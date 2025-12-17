@@ -2,8 +2,7 @@ import axios from "axios";
 import path from "path";
 import fs from "fs/promises";
 
-
-export {bulkBookDownloadZips};
+export {bulkBookDownloadZips,downloadZip};
 
 async function bulkBookDownloadZips(bookInfo, baseUrl, outputFolder) {
   let zipPaths = [];

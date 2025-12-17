@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio";
-import { __scrappedFileDir, __websiteUrl } from "./paths.js";
+
+export {extractCountries};
 
 function extractCountries(html) {
   const $ = cheerio.load(html);

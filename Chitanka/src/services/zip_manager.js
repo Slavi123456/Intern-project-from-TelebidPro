@@ -1,7 +1,7 @@
 import AdmZip from "adm-zip";
 import path from "path";
 
-export {bulkUnzipFile};
+export {bulkUnzipFile, unzipFile};
 
 
 async function bulkUnzipFile(zipPaths) {

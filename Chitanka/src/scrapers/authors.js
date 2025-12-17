@@ -1,14 +1,25 @@
 
-async function scrapeAuthor() {
-  const baseUlr = "https://chitanka.info/authors/country/-";
-  try {
-    const html = await fetchPage(baseUlr);
-    console.log(html);
-    // const countriesInfo = extractCountries(html);
-    // console.log(countriesInfo);
+import { extractAuthors } from "../extractors/authors.js";
+import { fetchPage } from "../services/website_fetch.js";
 
-    // await bulkCreateDirectory(countriesInfo);
-    extractAuthors(html);
+export {bulkScrapingAuthors, scrapeAuthor};
+
+async function bulkScrapingAuthors(urls) {
+  let authorsInfo = [];
+  for (const url of urls) {
+    authorsInfo.push(await scrapeAuthor(url));
+  }
+  return authorsInfo;
+}
+
+
+// const baseUlr = "https://chitanka.info/authors/country/-";
+async function scrapeAuthor(baseUrl) {
+  try {
+    const html = await fetchPage(baseUrl);
+    // console.log(html);
+    return extractAuthors(html);
+
   } catch (error) {
     console.error("Error fetching page:", error.message);
   }

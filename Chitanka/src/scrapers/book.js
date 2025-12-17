@@ -1,21 +1,28 @@
-import { __scrappedFileDir, __websiteUrl } from "./paths.js";
+import { __scrappedFileDir,__websiteUrl } from "../paths.js";
+import { extractBookInfo } from "../extractors/books.js";
+import { bulkCreateDirectory } from "../services/filesystem_manager.js";
+import { bulkBookDownloadZips } from "../services/download_services.js";
+import { fetchPage } from "../services/website_fetch.js";
+import { bulkUnzipFile } from "../services/zip_manager.js";
+import { bulkReadBookText, printTexts } from "../extractors/books.js";
 
-async function scrapeAuthorWorks() {
-  const baseUlr = "https://chitanka.info/person/Anna-Blaman";
+export {bulkScrapingBooks, scrapeAuthorWorks};
+
+async function bulkScrapingBooks(urls) {
+  let booksInfo  = [];
+  for (const url of urls) {
+    booksInfo.push(await scrapeAuthorWorks(url));
+  }
+  return booksInfo;
+}
+
+// const baseUlr = "https://chitanka.info/person/Anna-Blaman";
+async function scrapeAuthorWorks(baseUrl) {
   try {
-    const html = await fetchPage(baseUlr);
-
+    const html = await fetchPage(baseUrl);
     const bookInfo = extractBookInfo(html);
-    const titles = bookInfo.map((book) => book.title);
-    await bulkCreateDirectory(__scrappedFileDir,titles);
-    const zipPaths = await bulkBookDownloadZips(bookInfo, __websiteUrl, __scrappedFileDir);
-    // console.log(zipPaths);
-    // const dir = path.dirname('c:\\Proekti\\TelebidIntern\\TrainingRepo\\Chitanka\\books\\Плувецът\\Плувецът.zip');
-    // console.log(dir);
-    const unzipedPaths = await bulkUnzipFile(zipPaths);
-    // console.log(unzipedPaths);
-    const texts = await bulkReadBookText(unzipedPaths);
-    printTexts(texts);
+
+    return bookInfo;
   } catch (error) {
     console.error("Error fetching page:", error.message);
   }
