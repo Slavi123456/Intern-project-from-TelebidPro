@@ -26,3 +26,14 @@ BEGIN
     );
 END;
 $$;
+
+
+INSERT INTO countries (name)
+VALUES ('Nep'), ('Av')
+ON CONFLICT DO NOTHING
+RETURNING *;
+
+TRUNCATE TABLE countries, authors, author_stats, books, book_stats, unique_words;
+
+SELECT table_name FROM information_schema.tables
+                      WHERE table_schema='public';

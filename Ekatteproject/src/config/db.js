@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// console.log("Loaded .env from:", process.env.PWD || process.cwd());
-// console.log("PDB_PASSWORD:", process.env.PDB_PASSWORD);
+console.log("Loaded .env from:", process.env.PWD || process.cwd());
+console.log("PDB_PASSWORD:", process.env.PDB_PASSWORD);
 
 
 const client = new Client({

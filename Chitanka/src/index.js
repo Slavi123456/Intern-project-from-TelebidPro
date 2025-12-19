@@ -1,24 +1,34 @@
 import path from "path";
-import { createUrls } from "./services/website_fetch.js";
 import { __scrappedFileDir, __websiteUrl } from "./paths.js";
+
+import { createUrls } from "./services/website_fetch.js";
 import { bulkCreateDirectory } from "./services/filesystem_manager.js";
 import { scrapeAuthorCountries } from "./scrapers/countries.js";
-import { bulkScrapingAuthors, scrapeAuthor } from "./scrapers/authors.js";
-import { bulkScrapingBooks, scrapeAuthorWorks } from "./scrapers/book.js";
-import {
-  bulkBookDownloadZips,
-  downloadZip,
-} from "./services/download_services.js";
-import { bulkUnzipFile, unzipFile } from "./services/zip_manager.js";
+import { scrapeAuthor } from "./scrapers/authors.js";
+import { scrapeAuthorWorks } from "./scrapers/book.js";
+import { downloadZip } from "./services/download_services.js";
+import { unzipFile } from "./services/zip_manager.js";
 import { readBookText } from "./extractors/books.js";
+
+import client from "./config/db.js";
+
 ("use-strict");
 
 main();
 
 async function main() {
+  const dataInfo = await extractingCycle();
+  if(dataInfo == null) { return; }
+  
+  //do more operations to the text
+  //saving the data
+  //retrieving statistics
+}
+
+
+
+async function extractingCycle() {
   const baseUlr = "https://chitanka.info/authors";
-  // const dataMap = new Map();
-  // const dataMap = [];
   try {
     const scrapedCountries = await scrapeAuthorCountries(baseUlr);
 
@@ -35,28 +45,18 @@ async function main() {
       .map((item) => item.href);
     const countriesUrls = createUrls(__websiteUrl, countriesUrlExtensions);
 
-    // for (let i = 0; i < scrapedCountries.length; ++i) {
-    //   let newObj = {
-    //     countryInfo: scrapedCountries[i],
-    //     countryDirectory: newCountryDir[i],
-    //     countryUrl: countriesUrls[i],
-    //   };
-    //   // dataMap.set(scrapedCountries[i].country, newObj);
-    //   dataMap.push(newObj);
-    // }
-    // console.log(dataMap);
-    let countriesInfo = [];
+    let dataInfo = [];
     for (let i = 0; i < scrapedCountries.slice(0, 2).length; ++i) {
       const countryInfo = {
         name: scrapedCountries[i].country,
         countryDir: newCountryDir[i],
         countryFullUrl: countriesUrls[i],
       };
-      countriesInfo.push(countryInfo);
+      dataInfo.push(countryInfo);
     }
 
     const SLICE_OF_OBJECTS = 1;
-    for (const obj of countriesInfo) {
+    for (const obj of dataInfo) {
       const countryFullUrl = obj.countryFullUrl;
       const authorsInfo = await scrapeAuthor(countryFullUrl);
 
@@ -114,6 +114,9 @@ async function main() {
         }
       }
     }
+
+    console.log(dataInfo);
+    return dataInfo;
   } catch (error) {
     console.error("Error fetching page:", error.message);
     console.error("Error fetching page:", err);
