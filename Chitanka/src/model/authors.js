@@ -1,7 +1,7 @@
 import client from "../config/db.js";
 
-const authors = [{name: "Ari", country_id: [11]}, {name: "Kori", country_id: [12]}];
-console.log(insertIntoTableAuthors("Poki", authors));
+// const authors = [{name: "Ari", country_id: [11]}, {name: "Kori", country_id: [12]}];
+// console.log(insertIntoTableAuthors("Poki", authors));
 
 async function insertIntoTableAuthors(tableName, data) {
   console.log("->> Inserting into table " + tableName);

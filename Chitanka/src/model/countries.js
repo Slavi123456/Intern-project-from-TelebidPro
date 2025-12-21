@@ -1,6 +1,8 @@
 import client from "../config/db.js";
 
-const data = ["ARI", "KORI"];
+export {insertIntoTable, insertIntoTableAuthors, insertIntoTableBooks}
+
+// const data = ["ARI", "KORI"];
 // console.log(await insertIntoTable("Chupa", data));
 
 async function insertIntoTable(tableName, data) {
@@ -27,7 +29,7 @@ async function insertIntoTable(tableName, data) {
 }
 
 
-const authors = [{name: "Ari", countryId: 11}, {name: "Kori", countryId: 12}];
+// const authors = [{name: "Ari", countryId: 11}, {name: "Kori", countryId: 12}];
 // console.log(await insertIntoTableAuthors("Poki", authors));
 
 async function insertIntoTableAuthors(tableName, data) {
@@ -55,11 +57,11 @@ async function insertIntoTableAuthors(tableName, data) {
     return res.rows;
 }
 
-const books = [
-  {title: 'Ari', content: "abc", auhtorId: 1 },
-  {title: 'Baba', content: "babs", auhtorId: 2 },
-];
-console.log(await insertIntoTableBooks("Books", books));
+// const books = [
+//   {title: 'Ari', content: "abc", auhtorId: 1 },
+//   {title: 'Baba', content: "babs", auhtorId: 2 },
+// ];
+// console.log(await insertIntoTableBooks("Books", books));
 
 async function insertIntoTableBooks(tableName, data) {
   console.log("->> Inserting into table " + tableName);
@@ -73,7 +75,7 @@ async function insertIntoTableBooks(tableName, data) {
         values += `, `;
     }
   }
-  const flatData = data.flatMap(book => [book.title, book.content, book.auhtorId]); 
+  const flatData = data.flatMap(book => [book.title, book.content, book.authorId]); 
   console.log(flatData);
 
   let insertStatement = `INSERT INTO books (title, content, author_id) VALUES ${values} ON CONFLICT DO NOTHING RETURNING *`;
