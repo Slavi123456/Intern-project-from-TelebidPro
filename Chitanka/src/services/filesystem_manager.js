@@ -13,7 +13,6 @@ async function bulkCreateDirectory(folder, directoryNames) {
     if (await createDirectory(newPath)) {
       newDirectories.push(newPath);
     }
-
   }
   return newDirectories;
 }
@@ -27,21 +26,4 @@ async function createDirectory(directoryPath) {
     console.error(`Error creating directory: ${err.message}`);
     return false;
   }
-}
-
-async function readFile(folder, file) {
-  try {
-    const filePath = path.join(folder, file);
-    console.log(filePath);
-    const data = await fs.readFile(filePath, { encoding: "utf8" });
-
-    // console.log(data);
-    return data;
-  } catch (err) { }
-}
-
-async function saveFile(data, directoryPath, fileName) {
-  const filePath = path.join(directoryPath, fileName);
-  await fs.writeFile(filePath, data, "utf8");
-  console.log("Saved to", filePath);
 }

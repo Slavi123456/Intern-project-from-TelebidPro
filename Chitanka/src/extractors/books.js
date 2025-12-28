@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import * as cheerio from "cheerio";
 import path from "path";
 
-export {extractBookInfo, bulkReadBookText, printTexts,readBookText};
+export {extractBookInfo,readBookText};
 
 function extractBookInfo(html) {
   const $ = cheerio.load(html);
@@ -24,19 +24,6 @@ function extractBookInfo(html) {
   return results;
 }
 
-
-async function bulkReadBookText(folders) {
-  let bookText = [];
-  for (const folder of folders) {
-    bookText.push(await readBookText(folder));
-  }
-  return bookText;
-}
-
-// const text = await readBookText("./");
-// console.log(text.substring(0, 1500));
-// console.log(text);
-
 async function readBookText(folder) {
   const files = await fs.readdir(folder);
   const txtFile = files.find((f) => f.endsWith(".txt"));
@@ -45,19 +32,4 @@ async function readBookText(folder) {
 
   const content = await fs.readFile(path.join(folder, txtFile), "utf8");
   return content;
-}
-
-
-// const folders = [
-//   'c:\\Proekti\\TelebidIntern\\TrainingRepo\\Chitanka\\books\\Кръстоносецът',
-//   'c:\\Proekti\\TelebidIntern\\TrainingRepo\\Chitanka\\books\\Плувецът'
-// ];
-// const texts = await bulkReadBookText(folders);
-// for (const text of texts) {
-//     console.log(text.substring(0,100));
-// }
-function printTexts(texts) {
-    for (const text of texts) {
-      console.log(text.substring(0, 100));
-    }
 }

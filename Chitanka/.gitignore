@@ -4,3 +4,4 @@ tryout.js
 READMEtry.md
 ./src/database/tryout.sql
 books/
+coverage/

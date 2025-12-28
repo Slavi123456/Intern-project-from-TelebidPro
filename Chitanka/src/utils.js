@@ -1,10 +1,7 @@
-export {getAvrWordCountInSetence, countNonRepeatingWords, uniqueBetweenArrays}
-/////////////////////////////////////
-// const text2 = "Здравей! Как си? Днес е хубав ден, нали.";
-// getAvrWordCountInSetence("Здравей! Как си? Днес е хубав ден, нали.")
+export {getAvrWordCountInSetence, nonRepeatingWords, uniqueBetweenArrays}
 
 function getAvrWordCountInSetence(text) {
-  console.log(text);
+  // console.log(text);
 
   const sentences = text
     .split(/[.!?]+/)
@@ -15,36 +12,31 @@ function getAvrWordCountInSetence(text) {
   const words_in_sentance = sentences.map((sent) => {
     return sent.match(/[А-Яа-я]+/g) ?? [];
   });
-  console.log(words_in_sentance);
+  // console.log(words_in_sentance);
 
   let sum = 0;
+  if(words_in_sentance.length <= 0) return 0;
+
   words_in_sentance.forEach((arr) => {
     sum += arr.length;
   });
-  const avr_count = (sum / words_in_sentance.length).toFixed(2);
-  console.log(
-    `Avarage word count in a sentence ${avr_count}`);
-  console.log("/////////////////////////////");
+  const avr_count = parseFloat((sum / words_in_sentance.length).toFixed(2));
+  
+  // console.log(
+  //   `Avarage word count in a sentence ${avr_count}`);
+  // console.log("/////////////////////////////");
 
   return avr_count;
 }
-/////////////////////////////////////
-// const text = `маг маг аа б в в б`;
-// console.log(text);
 
-// const unique_words = countNonRepeatingWords(text);
-// console.log(unique_words);
-
-// console.log("/////////////////////////////");
-
-function countNonRepeatingWords(text) {
+function nonRepeatingWords(text) {
   const words = text.match(/[А-Яа-я]+/g) ?? [];
   const freq = new Map();
 
   for (const el of words) {
     freq.set(el, (freq.get(el) || 0) + 1);
   }
-  console.log(freq);
+  // console.log(freq);
   //   return [...freq.values()].filter(count => count === 1);
 
   return Array.from(freq.entries())
