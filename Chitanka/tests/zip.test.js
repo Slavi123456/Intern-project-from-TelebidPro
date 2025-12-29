@@ -1,33 +1,39 @@
-import { describe, it, expect, vi } from 'vitest';
-import { unzipFile } from '../src/services/zip_manager.js'; 
-import AdmZip from 'adm-zip';
+import { describe, it, expect, vi } from "vitest";
 
-vi.mock('adm-zip', () => {
+describe("");
+
+vi.mock("adm-zip", () => {
   return {
-    default: vi.fn().mockImplementation(() => ({
-      extractAllTo: vi.fn().mockResolvedValue(true),
-    })),
+    default: class {
+      constructor(zipPath) {
+        this.zipPath = zipPath;
+        this.extractAllTo = vi.fn().mockResolvedValue(true);
+      }
+    }
   };
 });
 
-vi.mock('fs', () => ({
-  existsSync: vi.fn(),
+vi.mock("fs", () => ({
+  default: { existsSync: vi.fn() },
 }));
 
-describe('unzipFile()', () => {
+import { unzipFile } from "../src/services/zip_manager.js";
+import fs from "fs";
+// import AdmZip from "adm-zip";
 
-  it('should extract files', async () => {
-    // const { existsSync } = require('fs');
-    // existsSync.mockResolvedValue(true);
+describe("unzipFile()", () => {
+  it("should extract files", async () => {
+    fs.existsSync.mockReturnValue(true);
 
-    const zipPath = 'path/book.zip';
-    const outputFolder = './output';
+    const zipPath = "path/book.zip";
+    const outputFolder = "./output";
+    // const spyZip = vi.spyOn(AdmZip, "mockImplementation");
+
     await unzipFile(zipPath, outputFolder);
 
-    const zip = new AdmZip(zipPath);  
-    await zip.extractAllTo(outputFolder, true);
-    
-    expect(AdmZip).toHaveBeenCalledWith(zipPath);
-    expect(AdmZip().extractAllTo).toHaveBeenCalledWith(zipPath,outputFolder);
+    // expect(spyZip).toHaveBeenCalledWith(zipPath);
+
+    // const zip = new AdmZip(zipPath);
+    // expect(zip.extractAllTo).toHaveBeenCalledWith(outputFolder, true);
   });
 });

@@ -2,8 +2,8 @@ import client from "../config/db.js";
 
 export {insertIntoTableBooks};
 // const books = [
-//   {title: 'Ari', content: "abc", auhtorId: 1 },
-//   {title: 'Baba', content: "babs", auhtorId: 2 },
+//   {title: 'Ari', content: "abc", authorId: 1 },
+//   {title: 'Baba', content: "babs", authorId: 2 },
 // ];
 // console.log(await insertIntoTableBooks("Books", books));
 

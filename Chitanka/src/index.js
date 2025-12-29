@@ -3,6 +3,7 @@ import { processStatistics } from "./statistics.js";
 import { populateTables } from "./model/main_insert.js";
 
 ("use-strict");
+export {main};
 
 main();
 
@@ -16,7 +17,5 @@ async function main() {
 
   const statistics = processStatistics(dataInfo);
   console.log(statistics);
-
-  // 4.Code coverage - 100%
 }
 

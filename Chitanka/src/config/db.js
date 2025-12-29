@@ -2,7 +2,7 @@ import { Client } from "pg";
 
 //To run locally only this file you need 
 // C:\path to the directory>node --env-file=.env "path to the file" - FOR WINDOWS !!!!
-console.log(process.env.HOST, process.env.PDB_NAME,process.env.PDB_USER, process.env.PDB_PASSWORD);
+// console.log(process.env.HOST, process.env.PDB_NAME,process.env.PDB_USER, process.env.PDB_PASSWORD);
 
 const client = new Client({
     user: process.env.PDB_USER,
