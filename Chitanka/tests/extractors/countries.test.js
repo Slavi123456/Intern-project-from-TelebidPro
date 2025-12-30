@@ -5,55 +5,48 @@ import { extractCountries } from "../../src/extractors/countries.js";
 
 describe("")
 
-// vi.mock("cheerio", () => ({
-//   load: vi.fn().mockImplementation(() => {
-//     return (selector) => {
-//       if (selector === 'a[href*="/authors/country"]') {
-//         return {
-//           each: vi.fn().mockImplementation((callback) => {
-//             const mockElements = [
-//               { 
-//                 text: () => "Country One", 
-//                 attr: () => "/authors/country/one", 
-//                 closest: () => ({
-//                   find: () => ({
-//                     text: () => "5"
-//                   })
-//                 })
-//               },
-//               { 
-//                 text: () => "Country Two", 
-//                 attr: () => "/authors/country/two", 
-//                 closest: () => ({
-//                   find: () => ({
-//                     text: () => "10"
-//                   })
-//                 })
-//               }
-//             ];
-//             mockElements.forEach((el, idx) => callback(idx, el)); 
-//           }),
-//         };
-//       }
-//       return {};
-//     };
-//   }),
-// }));
 
-// describe("extractCountries()", () => {
-//   it("should extract countries, hrefs, and item counts from the HTML", () => {
-//     const html = `<html><body>
-//       <a href="/authors/country/one">Country One</a><span class="nr-of-items">5</span>
-//       <a href="/authors/country/two">Country Two</a><span class="nr-of-items">10</span>
-//     </body></html>`;
+describe("extractCountries()", () => {
+  it("extracts countries with counts", () => {
+    const html = `
+      <ul class="countries">
+        <li>
+          <a href="/authors/country/uk">United Kingdom</a>
+          <span class="nr-of-items">12</span>
+        </li>
+        <li>
+          <a href="/authors/country/fr">France</a>
+          <span class="nr-of-items">7</span>
+        </li>
+        <li>
+          <a href="/authors/country/de">Germany</a>
+          <span class="nr-of-items">3</span>
+        </li>
+        <li>
+          <a href="/authors/genre/fiction">Fiction</a>
+          <span class="nr-of-items">99</span>
+        </li>
+      </ul>
+    `;
 
-//     const expectedResult = [
-//       { country: "Country One", href: "/authors/country/one", count: 5 },
-//       { country: "Country Two", href: "/authors/country/two", count: 10 },
-//     ];
+    const result = extractCountries(html);
 
-//     const result = extractCountries(html);
-
-//     expect(result).toEqual(expectedResult);
-//   });
-// });
+    expect(result).toEqual([
+      {
+        country: "United Kingdom",
+        href: "/authors/country/uk",
+        count: 12,
+      },
+      {
+        country: "France",
+        href: "/authors/country/fr",
+        count: 7,
+      },
+      {
+        country: "Germany",
+        href: "/authors/country/de",
+        count: 3,
+      },
+    ]);
+  });
+});

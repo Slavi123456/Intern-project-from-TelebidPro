@@ -5,6 +5,7 @@ import { insertIntoTableBooks } from "./books.js";
 export { populateTables };
 
 async function populateTables(dataInfo) {
+  if (dataInfo.length === 0) return;
   const countriesNames = dataInfo.map((item) => item.name);
   const countriesDBInfo = await insertIntoTable("Countries", countriesNames);
   //   console.log(countriesDBInfo);

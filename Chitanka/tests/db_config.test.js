@@ -1,5 +1,5 @@
-import { describe, it, vi, expect } from "vitest";
-
+import { describe, it, vi, expect, beforeEach } from "vitest";
+import { connectToDatabase, disconnectFromDatabase } from "../src/config/db.js";
 // describe("");
 
 vi.mock("pg", () => {
@@ -8,7 +8,7 @@ vi.mock("pg", () => {
       constructor() {
         this.connect = vi.fn().mockResolvedValue();
         this.query = vi.fn().mockResolvedValue({ rows: [] });
-        this.end = vi.fn().mockResolvedValue();
+        this.end = vi.fn().mockResolvedValue(true);
       }
     },
   };
@@ -17,7 +17,19 @@ vi.mock("pg", () => {
 import client from "../src/config/db.js";
 
 describe("Database client module", () => {
-  it("should connect the client on import", async () => {
-    expect(client.connect).toHaveBeenCalled();
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("connectToDatabase should call client.connect()", async () => {
+    await connectToDatabase();
+
+    expect(client.connect).toHaveBeenCalledTimes(1);
+  });
+
+  it("disconnectFromDatabase should call client.end()", async () => {
+    await disconnectFromDatabase();
+
+    expect(client.end).toHaveBeenCalledTimes(1);
   });
 });

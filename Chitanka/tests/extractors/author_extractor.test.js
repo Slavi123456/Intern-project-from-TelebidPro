@@ -1,44 +1,72 @@
-import * as cheerio from "cheerio";
 import { describe, it, expect, vi } from "vitest";
 import { extractAuthors } from "../../src/extractors/authors.js";
 
+import * as cheerio from "cheerio";
 
-describe("")
+describe("extractAuthors()", () => {
+   it("extracts authors with /person links", () => {
+    const html = `
+      <html>
+        <body>
+          <a href="/person/123">Author One</a>
+          <a href="/person/456">Author Two</a>
+          <a href="/book/789">Not an Author</a>
+        </body>
+      </html>
+    `;
 
-// vi.mock("cheerio", () => ({
-//   load: vi.fn().mockImplementation(() => {
-//     return vi.fn().mockImplementation((selector) => {
-//       if (selector === 'a[href*="/person"]') {
-//         return {
-//           each: vi.fn().mockImplementation((callback) => {
-//             const mockElements = [
-//               { text: () => "Author One", attr: () => "/person/1" },
-//               { text: () => "Author Two", attr: () => "/person/2" }
-//             ];
-//             mockElements.forEach((el, idx) => callback(idx, el));
-//           }),
-//         };
-//       }
-//       return {};
-//     });
-//   }),
-// }));
+    const result = extractAuthors(html);
 
+    expect(result).toEqual([
+      { author: "Author One", href: "/person/123" },
+      { author: "Author Two", href: "/person/456" },
+    ]);
+  });
 
-// describe("extractAuthors()", () => {
-//   it("should extract authors and their hrefs from the HTML", () => {
-//     const html = `<html><body>
-//       <a href="/person/1">Author One</a>
-//       <a href="/person/2">Author Two</a>
-//     </body></html>`;
+  it("trims author names", () => {
+    const html = `
+      <a href="/person/1">
+        Author With Spaces
+      </a>
+    `;
 
-//     const expectedResult = [
-//       { author: "Author One", href: "/person/1" },
-//       { author: "Author Two", href: "/person/2" },
-//     ];
+    const result = extractAuthors(html);
 
-//     const result = extractAuthors(html);
+    expect(result).toEqual([
+      { author: "Author With Spaces", href: "/person/1" },
+    ]);
+  });
 
-//     expect(result).toEqual(expectedResult);
-//   });
-// });
+  it("returns empty array when no authors are found", () => {
+    const html = `
+      <html>
+        <body>
+          <a href="/book/1">Some Book</a>
+        </body>
+      </html>
+    `;
+
+    const result = extractAuthors(html);
+
+    expect(result).toEqual([]);
+  });
+
+  it("handles empty HTML string", () => {
+    const result = extractAuthors("");
+
+    expect(result).toEqual([]);
+  });
+
+  it("handles missing href safely", () => {
+    const html = `
+      <a>Author Without Link</a>
+      <a href="/person/99">Valid Author</a>
+    `;
+
+    const result = extractAuthors(html);
+
+    expect(result).toEqual([
+      { author: "Valid Author", href: "/person/99" },
+    ]);
+  });
+});

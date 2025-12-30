@@ -12,7 +12,14 @@ const client = new Client({
     database: process.env.PDB_NAME,
   });
 
-await client.connect();
+export async function connectToDatabase() {
+  await client.connect();
+}
+
+export async function disconnectFromDatabase() {
+  await client.end();
+}
+
 
 
 // const tableNames = await client.query(`SELECT table_name FROM information_schema.tables
