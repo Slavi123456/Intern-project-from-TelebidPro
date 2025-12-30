@@ -1,3 +1,4 @@
+import { get_all_village_rows } from "../model/village.js";
 import { data_load, fill_tables, village_query_handler} from "./queries.js";
 import { serve_static_files } from "./static_files.js";
 
@@ -19,10 +20,22 @@ async function get_controller(req, res) {
     }
     case "/api/init": {
       await fill_tables();
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end("");
+      break;
+    }
+    
+    case "/api/villages": {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(await get_all_village_rows()));
+      break;
+    }
+    
+    case "/api/init-statistics": {
       await data_load(req,res);
       break;
     }
-    case "/villages": {
+    case "/search/villages": {
       await village_query_handler(req,res);
       break;
     }

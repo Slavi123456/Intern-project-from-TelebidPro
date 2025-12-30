@@ -2,15 +2,22 @@ window.addEventListener("DOMContentLoaded", init);
 
 async function init() {
   try {
-    const res = await fetch("/api/init");
-    const data = await res.json();
+    await fetch("/api/init");
 
-    console.log("Loaded:", data);
+    const res = await fetch("/api/villages");
+    const villageData = await res.json();
+    console.log(villageData);
+    fill_table(villageData);
 
-    document.getElementById("district_info").textContent = data.district_count;
-    document.getElementById("township_info").textContent = data.township_count;
-    document.getElementById("cityhall_info").textContent = data.cityhalls_count;
-    document.getElementById("village_info").textContent = data.village_count;
+    const resStat = await fetch("/api/init-statistics");
+    const statistics = await resStat.json();
+
+    console.log("Loaded:", statistics);
+
+    document.getElementById("district_info").textContent = statistics.district_count;
+    document.getElementById("township_info").textContent = statistics.township_count;
+    document.getElementById("cityhall_info").textContent = statistics.cityhalls_count;
+    document.getElementById("village_info").textContent = statistics.village_count;
   } catch (e) {
     console.error("Error loading:", e);
   }
@@ -46,7 +53,7 @@ async function submid_handler(info) {
 
   // console.log("QUery submitted:", query);
 
-  await fetch(`/villages?${params}`)
+  await fetch(`/search/villages?${params}`)
     .then((res) => res.json())
     .then((data) => {
       console.log("Results:", data);
@@ -54,6 +61,8 @@ async function submid_handler(info) {
       fill_table(data.rows);
     });
 }
+let currentPage = 1;
+const rowsPerPage = 10;
 
 function fill_table(data) {
   // const villagesData = [
@@ -71,18 +80,48 @@ function fill_table(data) {
   const tbody = document.querySelector("#villagesTable tbody");
   tbody.innerHTML = "";
 
-  data.forEach((village) => {
+  const start = (currentPage - 1) * rowsPerPage;
+  const end = start + rowsPerPage;
+  const pageData = data.slice(start, end);
+
+  console.log(pageData);
+
+  pageData.forEach((village) => {
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td>${village.id}</td>
-      <td>${village.name}</td>
-      <td>${village.name_en}</td>
-      <td>${village.districtname}</td>
-      <td>${village.townshipname}</td>
-      <td>${village.cityhallname}</td>
+      <td><p>${village.id}</p></td>
+      <td><p>${village.name}</p></td>
+      <td><p>${village.name_en}</p></td>
+      <td><p>${village.districtname}</p></td>
+      <td><p>${village.townshipname}</p></td>
+      <td><p>${village.cityhallname}</p></td>
+      <td>
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+      </td>
     `;
+
+    row.querySelector(".edit-btn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      console.log(`Edit ${village.name}`);
+    });
+
+    row.querySelector(".delete-btn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const confirmDelete = confirm(`Delete ${village.name}?`);
+      if (confirmDelete) {
+        console.log(`Delete ${village.name}`);
+      }
+    });
 
     tbody.appendChild(row);
   });
+
+  const pageInfo = document.getElementById("pageInfo");
+  const totalPages = Math.ceil(data.length / rowsPerPage);
+  pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+  document.getElementById("prevBtn").disabled = currentPage === 1;
+  document.getElementById("nextBtn").disabled = currentPage === totalPages;
 }

@@ -6,7 +6,7 @@ import { withErrorHandling } from "../utils/errorHandling.js";
 import dotenv from "dotenv";
 import client from "../config/db.js"
 
-export { safe_get_village_values, get_village_rows_count, get_villages_info};
+export { safe_get_village_values, get_village_rows_count, get_villages_info, get_all_village_rows};
 
 //Somehow to be exported only on test environment
 export { get_ids_from_queries, get_ids_from_text, get_village_values}
@@ -130,3 +130,24 @@ async function get_villages_info({ bgName, enName }) {
   // console.log(sql, params);
   return await client.query(sql, params);
 }
+
+async function get_all_village_rows() {
+   let sql = `
+    SELECT 
+        V.id,
+        V.name,
+        V.name_en,
+        D.name AS DistrictName,
+        T.name AS TownshipName,
+        (SELECT name FROM cityhall C WHERE C.township_id = T.id LIMIT 1) AS CityhallName
+    FROM villages V
+    JOIN district D ON V.district_id = D.id
+    JOIN township T ON V.township_id = T.id
+    WHERE 1 = 1`;
+  const villages = await client.query(sql);
+  // console.log(villages_count.rows);
+
+  return villages.rows;
+}
+
+// console.log(get_all_village_rows());
