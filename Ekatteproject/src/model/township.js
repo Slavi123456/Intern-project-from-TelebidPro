@@ -1,7 +1,7 @@
 import { validateMany } from "../utils/validation.js";
 import client from "../config/db.js"
 
-export {select_id_query_from_township, get_township_rows_count};
+export {select_id_query_from_township, get_township_rows_count, get_township_rows_names};
 
 async function select_id_query_from_township(township_name) {
   validateMany ( {
@@ -28,4 +28,10 @@ async function get_township_rows_count() {
   // console.log(villages_count.rows[0]?.count);
 
   return res.rows[0]?.count;
+}
+
+async function get_township_rows_names() {
+  const res = await client.query("SELECT name FROM township;");
+
+  return res.rows;
 }

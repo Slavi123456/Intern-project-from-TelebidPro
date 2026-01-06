@@ -6,7 +6,8 @@ import { withErrorHandling } from "../utils/errorHandling.js";
 import dotenv from "dotenv";
 import client from "../config/db.js"
 
-export { safe_get_village_values, get_village_rows_count, get_villages_info, get_all_village_rows};
+export { safe_get_village_values, get_village_rows_count, get_villages_info, 
+  get_all_village_rows, get_village_id, update_village};
 
 //Somehow to be exported only on test environment
 export { get_ids_from_queries, get_ids_from_text, get_village_values}
@@ -151,3 +152,26 @@ async function get_all_village_rows() {
 }
 
 // console.log(get_all_village_rows());
+
+async function get_village_id(village_name) {
+  const id_res = await client.query(
+    "SELECT id FROM villages WHERE villages.name = $1;",
+    [village_name]
+  );
+
+  return id_res.rows[0]?.id;
+}
+
+
+async function update_village(village_id, new_info){
+  const {name, name_en, township_id, district_id} = new_info;
+
+  const res = await client.query(
+    `UPDATE villages
+    SET name = $1, name_en = $2, township_id = $3, district_id = $4
+    WHERE id = $5;`,
+    [name,name_en,township_id,district_id, village_id]
+  );
+  console.log(res.rows);
+  // return res.rows;
+}

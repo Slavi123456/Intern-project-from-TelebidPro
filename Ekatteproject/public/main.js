@@ -5,24 +5,28 @@ async function init() {
     await fetch("/api/init");
 
     const res = await fetch("/api/villages");
-    const villageData = await res.json();
+    villageData = await res.json();
     console.log(villageData);
     fill_table(villageData);
+    updatePageMenu();
 
     const resStat = await fetch("/api/init-statistics");
     const statistics = await resStat.json();
 
     console.log("Loaded:", statistics);
 
-    document.getElementById("district_info").textContent = statistics.district_count;
-    document.getElementById("township_info").textContent = statistics.township_count;
-    document.getElementById("cityhall_info").textContent = statistics.cityhalls_count;
-    document.getElementById("village_info").textContent = statistics.village_count;
+    document.getElementById("district_info").textContent =
+      statistics.district_count;
+    document.getElementById("township_info").textContent =
+      statistics.township_count;
+    document.getElementById("cityhall_info").textContent =
+      statistics.cityhalls_count;
+    document.getElementById("village_info").textContent =
+      statistics.village_count;
   } catch (e) {
     console.error("Error loading:", e);
   }
 }
-///////////////////////////////////////////////////
 
 document
   .getElementById("villageForm")
@@ -36,6 +40,15 @@ document
 
     submid_handler(data);
   });
+
+document.getElementById("prevBtn").addEventListener("click", function () {
+  console.log("Previous button clicked!");
+  prevPage();
+});
+document.getElementById("nextBtn").addEventListener("click", function () {
+  console.log("Next button clicked!");
+  nextPage();
+});
 
 async function submid_handler(info) {
   // console.log("Form submitted:", info);
@@ -56,13 +69,12 @@ async function submid_handler(info) {
   await fetch(`/search/villages?${params}`)
     .then((res) => res.json())
     .then((data) => {
-      console.log("Results:", data);
-        console.log(data.rows);
-      fill_table(data.rows);
+      console.log(data.rows);
+      villageData = data.rows;
+      fill_table(villageData);
+      updatePageMenu();
     });
 }
-let currentPage = 1;
-const rowsPerPage = 10;
 
 function fill_table(data) {
   // const villagesData = [
@@ -90,12 +102,12 @@ function fill_table(data) {
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td><p>${village.id}</p></td>
-      <td><p>${village.name}</p></td>
-      <td><p>${village.name_en}</p></td>
-      <td><p>${village.districtname}</p></td>
-      <td><p>${village.townshipname}</p></td>
-      <td><p>${village.cityhallname}</p></td>
+      <td><p style="font-size: 12px;">${village.id}</p></td>
+      <td><p style="font-size: 12px;">${village.name}</p></td>
+      <td><p style="font-size: 12px;">${village.name_en}</p></td>
+      <td><p style="font-size: 12px;">${village.districtname}</p></td>
+      <td><p style="font-size: 12px;">${village.townshipname}</p></td>
+      <td><p style="font-size: 12px;">${village.cityhallname}</p></td>
       <td>
         <button class="edit-btn">Edit</button>
         <button class="delete-btn">Delete</button>
@@ -105,6 +117,9 @@ function fill_table(data) {
     row.querySelector(".edit-btn").addEventListener("click", (e) => {
       e.stopPropagation();
       console.log(`Edit ${village.name}`);
+      const params = new URLSearchParams(village);
+      window.location.href = "/editData.html?mode=edit&" + params.toString();
+      // console.log("/edit?mode=edit" + params.toString());
     });
 
     row.querySelector(".delete-btn").addEventListener("click", (e) => {
@@ -118,8 +133,35 @@ function fill_table(data) {
     tbody.appendChild(row);
   });
 
+  totalPages = Math.ceil(data.length / rowsPerPage);
+}
+
+
+function nextPage() {
+  if (totalPages <= -1) return;
+  if (currentPage < totalPages) {
+    currentPage++;
+    fill_table(villageData);
+    updatePageMenu();
+  }
+}
+
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    fill_table(villageData);
+    updatePageMenu();
+  }
+}
+
+let currentPage = 1;
+const rowsPerPage = 10;
+let totalPages = -1;
+let villageData = [];
+
+function updatePageMenu() {
+  if (totalPages <= -1) return;
   const pageInfo = document.getElementById("pageInfo");
-  const totalPages = Math.ceil(data.length / rowsPerPage);
   pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
 
   document.getElementById("prevBtn").disabled = currentPage === 1;

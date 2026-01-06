@@ -1,6 +1,11 @@
-import { get_controller } from "./controllers/get_controller.js";
 import { fix_request } from "./middlewares/fix_request.js";
 import { loggerMiddleware } from "./middlewares/logger.js";
+import { parseJsonBody } from "./middlewares/parse_json.js";
+import { serve_static_files } from "./controllers/static_files.js";
+
+import { routes } from "./routes.js";
+import "./controllers/get_controller.js";
+import "./controllers/post_controller.js";
 
 export { handler };
 
@@ -8,6 +13,7 @@ const middlewares = [];
 
 middlewares.push(fix_request);
 middlewares.push(loggerMiddleware);
+middlewares.push(parseJsonBody);
 
 function handler(req, res) {
   let ind = 0;
@@ -24,14 +30,34 @@ function handler(req, res) {
 }
 
 async function routing_dispatcher(req, res) {
-  switch (req.method) {
-    case "GET": {
-      await get_controller(req, res);
-      break;
-    }
-    default: {
-      res.statusCode = 404;
-      res.end("Not found");
-    }
+  const methodRoutes = routes.get(req.method);
+
+  if (!methodRoutes) {
+    res.writeHead(405);
+    res.end("Method Not Allowed");
+    return;
   }
+
+  const handler = methodRoutes.get(req.pathname);
+
+  if (!handler) {
+    await serve_static_files(req, res, "public");
+    return;
+  }
+
+  await handler(req, res);
+  // switch (req.method) {
+  //   case "GET": {
+  //     await get_controller(req, res);
+  //     return;
+  //   }
+  //   case "POST": {
+  //     // await post_controller(req, res);
+  //     break;
+  //   }
+  //   default: {
+  //     res.statusCode = 404;
+  //     res.end("Not found");
+  //   }
+  // }
 }
