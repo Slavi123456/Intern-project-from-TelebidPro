@@ -6,14 +6,16 @@ import { serve_static_files } from "./controllers/static_files.js";
 import { routes } from "./routes.js";
 import "./controllers/get_controller.js";
 import "./controllers/post_controller.js";
+import "./controllers/put_controller.js";
+import "./controllers/delete_controller.js";
 
 export { handler };
 
 const middlewares = [];
 
+middlewares.push(parseJsonBody);
 middlewares.push(fix_request);
 middlewares.push(loggerMiddleware);
-middlewares.push(parseJsonBody);
 
 function handler(req, res) {
   let ind = 0;
@@ -46,18 +48,4 @@ async function routing_dispatcher(req, res) {
   }
 
   await handler(req, res);
-  // switch (req.method) {
-  //   case "GET": {
-  //     await get_controller(req, res);
-  //     return;
-  //   }
-  //   case "POST": {
-  //     // await post_controller(req, res);
-  //     break;
-  //   }
-  //   default: {
-  //     res.statusCode = 404;
-  //     res.end("Not found");
-  //   }
-  // }
 }

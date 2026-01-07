@@ -11,6 +11,7 @@ function loggerMiddleware(req, res, next) {
   console.log("URL:", `http://${process.env.HOST}${req.url}`);
   console.log("Query:", whole_url.search);
   console.log("Params:", getQueryParams(url));
+  console.log("Body:", req.body);
   req.pathname = whole_url.pathname;
   // console.log(whole_url.searchParams.get('api'));
   // console.log("Body:", body);

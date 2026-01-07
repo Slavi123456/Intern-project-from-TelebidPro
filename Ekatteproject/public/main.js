@@ -49,6 +49,12 @@ document.getElementById("nextBtn").addEventListener("click", function () {
   console.log("Next button clicked!");
   nextPage();
 });
+document.getElementById("createRowBtn").addEventListener("click", function () {
+  console.log("Create new row clicked!");
+  window.location.href = "/editData.html?mode=create";
+
+});
+
 
 async function submid_handler(info) {
   // console.log("Form submitted:", info);
@@ -122,11 +128,24 @@ function fill_table(data) {
       // console.log("/edit?mode=edit" + params.toString());
     });
 
-    row.querySelector(".delete-btn").addEventListener("click", (e) => {
+    row.querySelector(".delete-btn").addEventListener("click", async (e) => {
       e.stopPropagation();
       const confirmDelete = confirm(`Delete ${village.name}?`);
       if (confirmDelete) {
-        console.log(`Delete ${village.name}`);
+        console.log(`Delete ${village.id}`);
+        const res = await fetch("/api/delete-data", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({id: village.id})
+        });
+
+        if (res.ok) {
+          console.log("Village deleted successfully.");
+        } else {
+          console.error("Failed to delete village.");
+        }
       }
     });
 
@@ -162,7 +181,7 @@ let villageData = [];
 function updatePageMenu() {
   if (totalPages <= -1) return;
   const pageInfo = document.getElementById("pageInfo");
-  pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  pageInfo.textContent = `Страница ${currentPage} от ${totalPages}`;
 
   document.getElementById("prevBtn").disabled = currentPage === 1;
   document.getElementById("nextBtn").disabled = currentPage === totalPages;

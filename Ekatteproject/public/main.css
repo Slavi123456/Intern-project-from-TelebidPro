@@ -33,10 +33,11 @@ body {
 
 .table {
   grid-column: span 4;
-  grid-row: span 3;
+  grid-row: span 4;
   background: #ff9500;
   display: flex;
   align-items:flex-start;
+  flex-direction: column;
 }
 table {
   width: 100%;

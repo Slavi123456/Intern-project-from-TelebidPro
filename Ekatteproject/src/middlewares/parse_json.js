@@ -1,7 +1,7 @@
 export { parseJsonBody }
 
 function parseJsonBody(req, res, next) {
-    if (!["POST", "PUT", "PATCH"].includes(req.method)) {
+    if (!["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
         return next();
     }
 

@@ -7,7 +7,8 @@ import dotenv from "dotenv";
 import client from "../config/db.js"
 
 export { safe_get_village_values, get_village_rows_count, get_villages_info, 
-  get_all_village_rows, get_village_id, update_village};
+  get_all_village_rows, get_village_id, update_village, get_biggest_village_id,
+  insert_row_into_village, delete_village_row};
 
 //Somehow to be exported only on test environment
 export { get_ids_from_queries, get_ids_from_text, get_village_values}
@@ -174,4 +175,27 @@ async function update_village(village_id, new_info){
   );
   console.log(res.rows);
   // return res.rows;
+}
+
+async function get_biggest_village_id() {
+  const res = await client.query(`SELECT id FROM villages ORDER BY id DESC LIMIT 1;`);
+  // console.log('rows', res.rows[0], res.rows[0]?.id);
+  return res.rows[0]?.id;
+}
+
+async function insert_row_into_village(newVillage) {
+  const {id, name, name_en, township_id, district_id} = newVillage;
+  console.log(id,name, name_en, township_id, district_id);
+  const sql = ` INSERT INTO villages(id, name, name_en, township_id, district_id) 
+                  VALUES($1, $2, $3, $4, $5); --ON CONFLICT DO NOTHING RETURNING *;`;
+
+  const res = await client.query(sql, [id,name,name_en, township_id, district_id]);
+  console.log('rows', res.rows);
+  // return res.rows[];
+}
+
+async function delete_village_row(villageId) {
+  const res = await client.query(`DELETE FROM villages WHERE id = $1 RETURNING *;`, [villageId]);
+  console.log('DELETE rows', res);
+  return res.rowCount > 0;
 }
