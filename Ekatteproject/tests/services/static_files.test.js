@@ -11,7 +11,7 @@ global.mimeTypes = {
   ".js": "application/javascript",
 };
 
-import { serve_static_files } from "../src/controllers/static_files.js";
+import { serve_static_files } from "../../src/services/static_files.js";
 
 function createMockResponse() {
   return {

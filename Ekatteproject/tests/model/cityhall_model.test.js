@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 
-import client from "../src/config/db.js";
-import { get_cityhall_rows_count } from "../src/model/cityhalls.js";
+import client from "../../src/config/db.js";
+import { get_cityhall_rows_count } from "../../src/model/cityhalls.js";
 
-vi.mock("../src/config/db.js", () => ({
+vi.mock("../../src/config/db.js", () => ({
   default: {
     query: vi.fn(),
   },

@@ -1,5 +1,5 @@
-import { bulk_inserts_from_json } from "../services/databese_inserts.js";
-import { getStatistics } from "../services/statistics.js";
+import { bulk_inserts_from_json } from "./databese_inserts.js";
+import { getStatistics } from "./statistics.js";
 import { get_villages_info } from "../model/village.js";
 
 export {data_load, fill_tables, village_query_handler };

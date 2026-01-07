@@ -1,4 +1,4 @@
-import { fix_request } from "../src/middlewares/fix_request.js";
+import { fix_request } from "../../src/middlewares/fix_request.js";
 import {describe, it, expect, vi} from "vitest";
 
 

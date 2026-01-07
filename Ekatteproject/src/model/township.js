@@ -31,7 +31,7 @@ async function get_township_rows_count() {
 }
 
 async function get_township_rows_names() {
-  const res = await client.query("SELECT name FROM township;");
+  const res = await client.query("SELECT id, name FROM township;");
 
   return res.rows;
 }

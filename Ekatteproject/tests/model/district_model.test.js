@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
 
-import client from "../src/config/db.js";
+import client from "../../src/config/db.js";
 import {
   get_district_rows_count,
   select_id_query_from_district,
-} from "../src/model/district.js";
+} from "../../src/model/district.js";
 
-vi.mock("../src/config/db.js", () => ({
+vi.mock("../../src/config/db.js", () => ({
   default: {
     query: vi.fn(),
   },

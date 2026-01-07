@@ -1,18 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("../src/model/village.js", () => ({
+vi.mock("../../src/model/village.js", () => ({
   get_village_rows_count: vi.fn(),
 }));
 
-vi.mock("../src/model/district.js", () => ({
+vi.mock("../../src/model/district.js", () => ({
   get_district_rows_count: vi.fn(),
 }));
 
-vi.mock("../src/model/township.js", () => ({
+vi.mock("../../src/model/township.js", () => ({
   get_township_rows_count: vi.fn(),
 }));
 
-vi.mock("../src/model/cityhalls.js", () => ({
+vi.mock("../../src/model/cityhalls.js", () => ({
   get_cityhall_rows_count: vi.fn(),
 }));
 
@@ -27,11 +27,11 @@ vi.mock("../src/model/cityhalls.js", () => ({
 // }));
 
 // --- 3) Import after mocks ---
-import { getStatistics } from "../src/services/statistics.js";
-import { get_village_rows_count } from "../src/model/village.js";
-import { get_district_rows_count } from "../src/model/district.js";
-import { get_township_rows_count } from "../src/model/township.js";
-import { get_cityhall_rows_count } from "../src/model/cityhalls.js";
+import { getStatistics } from "../../src/services/statistics.js";
+import { get_village_rows_count } from "../../src/model/village.js";
+import { get_district_rows_count } from "../../src/model/district.js";
+import { get_township_rows_count } from "../../src/model/township.js";
+import { get_cityhall_rows_count } from "../../src/model/cityhalls.js";
 
 // Prevent logs during tests
 vi.spyOn(console, "log").mockImplementation(() => {});

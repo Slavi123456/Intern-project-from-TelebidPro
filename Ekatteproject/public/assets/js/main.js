@@ -31,7 +31,7 @@ async function init() {
 document
   .getElementById("villageForm")
   .addEventListener("submit", function (event) {
-    event.preventDefault(); // stop page reload
+    event.preventDefault();
 
     const data = {
       name: document.getElementById("bg-name").value,
@@ -51,7 +51,7 @@ document.getElementById("nextBtn").addEventListener("click", function () {
 });
 document.getElementById("createRowBtn").addEventListener("click", function () {
   console.log("Create new row clicked!");
-  window.location.href = "/editData.html?mode=create";
+  window.location.href = "/edit_data.html?mode=create";
 
 });
 
@@ -124,7 +124,7 @@ function fill_table(data) {
       e.stopPropagation();
       console.log(`Edit ${village.name}`);
       const params = new URLSearchParams(village);
-      window.location.href = "/editData.html?mode=edit&" + params.toString();
+      window.location.href = "/edit_data.html?mode=edit&" + params.toString();
       // console.log("/edit?mode=edit" + params.toString());
     });
 
@@ -143,6 +143,7 @@ function fill_table(data) {
 
         if (res.ok) {
           console.log("Village deleted successfully.");
+          window.location.reload();
         } else {
           console.error("Failed to delete village.");
         }

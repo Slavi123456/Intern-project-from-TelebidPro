@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { getQueryParam, getQueryParams } from "../src/middlewares/query_params.js";
+import { getQueryParam, getQueryParams } from "../../src/middlewares/query_params.js";
 
 describe("getQueryParam()", () => {
   beforeAll(() => {

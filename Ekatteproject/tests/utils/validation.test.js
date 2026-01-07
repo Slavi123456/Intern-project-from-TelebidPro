@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateMany } from "../src/utils/validation";
+import { validateMany } from "../../src/utils/validation";
 import dotenv from "dotenv";
 
 dotenv.config();

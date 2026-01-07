@@ -1,24 +1,24 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("../src/config/db.js", () => ({
+vi.mock("../../src/config/db.js", () => ({
   default: { query: vi.fn() },
 }));
 
-vi.mock("../src/model/village.js", () => ({
+vi.mock("../../src/model/village.js", () => ({
   safe_get_village_values: vi.fn(),
 }));
 
-vi.mock("../src/utils/errorHandling.js", () => ({
+vi.mock("../../src/utils/errorHandling.js", () => ({
   withErrorHandling: (fn) => fn, // just return original function
 }));
 
-vi.mock("../src/utils/validation.js", () => ({
+vi.mock("../../src/utils/validation.js", () => ({
   validateMany: vi.fn(),
 }));
 
-import db_client from "../src/config/db.js";
-import { safe_get_village_values } from "../src/model/village.js";
-import { bulk_inserts_from_json, insert_into_table } from "../src/services/databese_inserts.js";
+import db_client from "../../src/config/db.js";
+import { safe_get_village_values } from "../../src/model/village.js";
+import { bulk_inserts_from_json, insert_into_table } from "../../src/services/databese_inserts.js";
 
 describe("Bulk insert functions", () => {
   beforeEach(() => {

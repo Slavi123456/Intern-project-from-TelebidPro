@@ -31,6 +31,6 @@ async function get_district_rows_count() {
 }
 
 async function get_district_rows_names() {
-  const res = await client.query("SELECT name FROM district;");
+  const res = await client.query("SELECT id,name FROM district;");
   return res.rows;
 }

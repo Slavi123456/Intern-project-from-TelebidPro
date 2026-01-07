@@ -1,23 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("../src/model/district.js", () => ({
+vi.mock("../../src/model/district.js", () => ({
   select_id_query_from_district: vi.fn(),
 }));
-vi.mock("../src/model/township.js", () => ({
+vi.mock("../../src/model/township.js", () => ({
   select_id_query_from_township: vi.fn(),
 }));
 
-vi.mock("../src/config/db.js", () => ({
+vi.mock("../../src/config/db.js", () => ({
   default: {
     query: vi.fn(),
   },
 }));
 
-vi.mock("../src/utils/validation.js", () => ({
+vi.mock("../../src/utils/validation.js", () => ({
   validateMany: vi.fn(),
 }));
 
-vi.mock("../src/utils/villageParser.js", () => ({
+vi.mock("../../src/utils/villageParser.js", () => ({
   parse_names_from_village_text: vi.fn(),
 }));
 
@@ -25,20 +25,20 @@ vi.mock("../src/utils/villageParser.js", () => ({
 //   NotFoundError: vi.
 // }))
 
-import { select_id_query_from_township } from "../src/model/township.js";
-import { select_id_query_from_district } from "../src/model/district.js";
-import { get_ids_from_queries } from "../src/model/village.js";
-import { parse_names_from_village_text } from "../src/utils/villageParser.js";
-import client from "../src/config/db.js";
-import { validateMany } from "../src/utils/validation.js";
+import { select_id_query_from_township } from "../../src/model/township.js";
+import { select_id_query_from_district } from "../../src/model/district.js";
+import { get_ids_from_queries } from "../../src/model/village.js";
+import { parse_names_from_village_text } from "../../src/utils/villageParser.js";
+import client from "../../src/config/db.js";
+import { validateMany } from "../../src/utils/validation.js";
 
 // import {parse_names_from_village_text, get_villages_info,get_village_rows_count}
 
 // import { NotFoundError } from "../src/errors/custom_error.js";
-import { get_ids_from_text } from "../src/model/village.js";
-import { get_village_values } from "../src/model/village.js";
-import { get_village_rows_count } from "../src/model/village.js";
-import { get_villages_info } from "../src/model/village.js";
+import { get_ids_from_text } from "../../src/model/village.js";
+import { get_village_values } from "../../src/model/village.js";
+import { get_village_rows_count } from "../../src/model/village.js";
+import { get_villages_info } from "../../src/model/village.js";
 
 describe("Villages functions", () => {
   beforeEach(() => {

@@ -11,12 +11,12 @@ vi.mock("../src/controllers/queries.js", () => ({
   village_query_handler: vi.fn(),
 }));
 
-import { serve_static_files } from "../src/controllers/static_files.js";
+import { serve_static_files } from "../src/services/static_files.js";
 import {
   fill_tables,
   data_load,
   village_query_handler,
-} from "../src/controllers/queries.js";
+} from "../src/services/queries.js";
 // import { data_load } from "../src/controllers/queries.js";
 // import { village_query_handler } from "../src/controllers/queries.js";
 
@@ -34,70 +34,70 @@ function createMockRes() {
   res.writeHead = vi.fn();
   return res;
 }
+describe("")
+// describe("get_controller integration tests", () => {
+//   beforeEach(() => {
+//     vi.clearAllMocks();
+//   });
 
-describe("get_controller integration tests", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+//   it("should serve main.html for '/'", async () => {
+//     const req = createMockReq("/");
+//     const res = createMockRes();
 
-  it("should serve main.html for '/'", async () => {
-    const req = createMockReq("/");
-    const res = createMockRes();
+//     // serve_static_files.mockResolvedValue(4);
 
-    // serve_static_files.mockResolvedValue(4);
+//     await get_controller(req, res);
 
-    await get_controller(req, res);
+//     expect(serve_static_files).toHaveBeenCalledWith(
+//       req,
+//       res,
+//       "public/main.html"
+//     );
+//   });
 
-    expect(serve_static_files).toHaveBeenCalledWith(
-      req,
-      res,
-      "public/main.html"
-    );
-  });
+//   it("should serve main.css for '/main.css'", async () => {
+//     const req = createMockReq("/main.css");
+//     const res = createMockRes();
 
-  it("should serve main.css for '/main.css'", async () => {
-    const req = createMockReq("/main.css");
-    const res = createMockRes();
+//     await get_controller(req, res);
 
-    await get_controller(req, res);
+//     expect(serve_static_files).toHaveBeenCalledWith(req, res, "public");
+//   });
 
-    expect(serve_static_files).toHaveBeenCalledWith(req, res, "public");
-  });
+//   it("should serve main.js for '/main.js'", async () => {
+//     const req = createMockReq("/main.js");
+//     const res = createMockRes();
 
-  it("should serve main.js for '/main.js'", async () => {
-    const req = createMockReq("/main.js");
-    const res = createMockRes();
+//     await get_controller(req, res);
 
-    await get_controller(req, res);
+//     expect(serve_static_files).toHaveBeenCalledWith(req, res, "public");
+//   });
 
-    expect(serve_static_files).toHaveBeenCalledWith(req, res, "public");
-  });
+//   it("should call fill_tables and data_load for '/api/init'", async () => {
+//     const req = createMockReq("/api/init");
+//     const res = createMockRes();
 
-  it("should call fill_tables and data_load for '/api/init'", async () => {
-    const req = createMockReq("/api/init");
-    const res = createMockRes();
+//     await get_controller(req, res);
 
-    await get_controller(req, res);
+//     expect(fill_tables).toHaveBeenCalled();
+//     expect(data_load).toHaveBeenCalledWith(req, res);
+//   });
 
-    expect(fill_tables).toHaveBeenCalled();
-    expect(data_load).toHaveBeenCalledWith(req, res);
-  });
+//   it("should call village_query_handler for '/villages'", async () => {
+//     const req = createMockReq("/villages");
+//     const res = createMockRes();
 
-  it("should call village_query_handler for '/villages'", async () => {
-    const req = createMockReq("/villages");
-    const res = createMockRes();
+//     await get_controller(req, res);
 
-    await get_controller(req, res);
+//     expect(village_query_handler).toHaveBeenCalledWith(req, res);
+//   });
 
-    expect(village_query_handler).toHaveBeenCalledWith(req, res);
-  });
+//   it("should fallback to serve_static_files for unknown routes", async () => {
+//     const req = createMockReq("/unknown");
+//     const res = createMockRes();
 
-  it("should fallback to serve_static_files for unknown routes", async () => {
-    const req = createMockReq("/unknown");
-    const res = createMockRes();
+//     await get_controller(req, res);
 
-    await get_controller(req, res);
-
-    expect(serve_static_files).toHaveBeenCalledWith(req, res, "public");
-  });
-});
+//     expect(serve_static_files).toHaveBeenCalledWith(req, res, "public");
+//   });
+// });

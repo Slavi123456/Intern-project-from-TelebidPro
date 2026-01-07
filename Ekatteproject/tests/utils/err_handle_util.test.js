@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { withErrorHandling } from "../src/utils/errorHandling.js";
+import { withErrorHandling } from "../../src/utils/errorHandling.js";
 
 class FakeError extends Error {
   constructor(msg) {
