@@ -6,6 +6,7 @@ import { serve_static_files } from "../services/static_files.js";
 
 import { routes } from "../routes.js";
 import { sorting } from "../model/sorting.js";
+import ExcelJS from 'exceljs';
 
 routes
   .get("GET")
@@ -55,4 +56,55 @@ routes.get("GET").set("/sorted/villages", async (req, res) => {
     res.writeHead(400, { 'Content-Type': 'text/plain' });
     res.end('Bad Request: Invalid method or endpoint.');
   }
+})
+
+routes.get("GET").set("/export/excel", async (req,res) => {
+  try {
+        const data = [
+            { id: 1, name: 'Village1', name_en: 'Village1EN' },
+            { id: 2, name: 'Village2', name_en: 'Village2EN' }
+        ];
+
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('Statistics');
+
+        sheet.addRow(Object.keys(data[0]));
+        data.forEach(item => sheet.addRow(Object.values(item)));
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename="statistics.xlsx"');
+
+        await workbook.xlsx.write(res);
+        res.end();
+
+    } catch (err) {
+        console.error(err);
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end('Failed to generate Excel');
+    }
+})
+routes.get("GET").set("/export/csv", async (req,res) => {
+  try {
+        const data = [
+            { id: 1, name: 'Village1', name_en: 'Village1EN' },
+            { id: 2, name: 'Village2', name_en: 'Village2EN' }
+        ];
+
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('Statistics');
+
+        sheet.addRow(Object.keys(data[0]));
+        data.forEach(item => sheet.addRow(Object.values(item)));
+
+        res.setHeader('Content-Type', ' text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename="statistics.csv"');
+
+        await workbook.csv.write(res);
+        res.end();
+
+    } catch (err) {
+        console.error(err);
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end('Failed to generate Excel');
+    }
 })

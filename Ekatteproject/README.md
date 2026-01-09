@@ -6,9 +6,10 @@
 
 - **Docker** – За контейнеризация на базите данни, в които ще се съхранява информацията.
 - **Node.js** – За backend логиката.
-   - **Vitest** - Използва се за писане на unit тестове.
-   - **Nodemon** - Автоматично презарежда приложението при промяна в кода.
-   - **Dotenv** - Зарежда environment променливи от .env файл
+  - **Vitest** - Използва се за писане на unit тестове.
+  - **Nodemon** - Автоматично презарежда приложението при промяна в кода.
+  - **Dotenv** - Зарежда environment променливи от .env файл
+  - **Exceljs** - За извеждане на статистиките в CSV формат и XLSX за Microsoft Excel
 - **PostgreSQL** – За комуникация между backend-а и базите данни.
 
 ## Схема на проекта
@@ -38,9 +39,12 @@
    docker create --name ekatte_db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 postgres  # Създаване на контейнер с PostgreSQL
    docker start ekatte_db  # Стартиране на контейнера
 
+   ```
+
 3. Създайте таблици в контейнера, използвайки скрипта Database.sql:
 
-    ```bash
-    docker exec -i ekatte_db psql -U postgres -d postgres < ./path/to/Database.sql  # Изпълнение на SQ
+   ```bash
+   docker exec -i ekatte_db psql -U postgres -d postgres < ./path/to/Database.sql  # Изпълнение на SQ
 
-    Заменете ./path/to/Database.sql с пълния път към вашия файл Database.sql.
+   Заменете ./path/to/Database.sql с пълния път към вашия файл Database.sql.
+   ```

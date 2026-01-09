@@ -54,10 +54,36 @@ document.getElementById("createRowBtn").addEventListener("click", function () {
   window.location.href = "/edit_data.html?mode=create";
 
 });
+document.getElementById("exportCSV").addEventListener("click", async function () {
+  console.log("Export for csv!");
+  fetch("/export/csv")
+    .then(res => res.blob())
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'statistics.csv';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
 
+});
+document.getElementById("exportXLSX").addEventListener("click", function () {
+  console.log("Export for xlsx!");
+  fetch("/export/excel")
+    .then(res => res.blob())
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'statistics.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+});
 // null = not sorted, 'asc' = ascending, 'desc' = descending
 const sortStates = {
-  id: null,        
+  id: null,
   nameBG: null,
   nameEN: null,
   district: null,
@@ -67,19 +93,19 @@ const sortStates = {
 document.querySelectorAll('th').forEach(th => {
   th.addEventListener('click', async () => {
     const column = th.dataset.column;
-    
+
     if (sortStates[column] === 'ASC') {
       sortStates[column] = 'DESC';
     } else {
       sortStates[column] = 'ASC';
     }
 
-    const params = new URLSearchParams(sortStates).toString();    
+    const params = new URLSearchParams(sortStates).toString();
     const res = await fetch(`/sorted/villages?${params}`);
     const data = await res.json();
 
     console.log("Sorted village data", data);
-    fill_table(data); 
+    fill_table(data);
   });
 });
 
