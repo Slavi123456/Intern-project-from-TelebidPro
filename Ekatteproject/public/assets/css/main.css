@@ -36,10 +36,10 @@ body {
   grid-row: span 4;
   background: #ff9500;
   display: flex;
-  align-items:flex-start;
+  align-items: stretch;
   flex-direction: column;
 }
-table {
+.table table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 16px;
@@ -53,6 +53,8 @@ td {
 th {
   background-color: #4a90e2;
   color: white;
+  text-align: left;
+  vertical-align: middle;
 }
 tr:nth-child(even) {
   background-color: #e8aaaa;
@@ -68,4 +70,26 @@ tr:nth-child(even) {
     grid-column: span 1;
     grid-row: auto;
   }
+}
+
+.table-column {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: auto;
+  height: auto;
+}
+.table-column img {
+  max-width: 100%; 
+  max-height: 20px; 
+}
+
+.order-img {
+  size: 10px;
+}
+
+.action-buttons {
+  display: flex;          
+  gap: 4px;               
+  justify-content: flex-start;
 }

@@ -55,6 +55,33 @@ document.getElementById("createRowBtn").addEventListener("click", function () {
 
 });
 
+// null = not sorted, 'asc' = ascending, 'desc' = descending
+const sortStates = {
+  id: null,        
+  nameBG: null,
+  nameEN: null,
+  district: null,
+  township: null,
+  cityhall: null
+};
+document.querySelectorAll('th').forEach(th => {
+  th.addEventListener('click', async () => {
+    const column = th.dataset.column;
+    
+    if (sortStates[column] === 'ASC') {
+      sortStates[column] = 'DESC';
+    } else {
+      sortStates[column] = 'ASC';
+    }
+
+    const params = new URLSearchParams(sortStates).toString();    
+    const res = await fetch(`/sorted/villages?${params}`);
+    const data = await res.json();
+
+    console.log("Sorted village data", data);
+    fill_table(data); 
+  });
+});
 
 async function submid_handler(info) {
   // console.log("Form submitted:", info);
@@ -115,8 +142,10 @@ function fill_table(data) {
       <td><p style="font-size: 12px;">${village.townshipname}</p></td>
       <td><p style="font-size: 12px;">${village.cityhallname}</p></td>
       <td>
-        <button class="edit-btn">Edit</button>
-        <button class="delete-btn">Delete</button>
+        <div class="action-buttons">
+          <button class="edit-btn">Edit</button>
+          <button class="delete-btn">Delete</button>
+        </div>
       </td>
     `;
 
@@ -138,7 +167,7 @@ function fill_table(data) {
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({id: village.id})
+          body: JSON.stringify({ id: village.id })
         });
 
         if (res.ok) {

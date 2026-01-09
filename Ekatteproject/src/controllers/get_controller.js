@@ -5,6 +5,7 @@ import { data_load, fill_tables, village_query_handler } from "../services/queri
 import { serve_static_files } from "../services/static_files.js";
 
 import { routes } from "../routes.js";
+import { sorting } from "../model/sorting.js";
 
 routes
   .get("GET")
@@ -43,3 +44,15 @@ routes.get("GET").set("/townships-names", async (req, res) => {
   res.writeHead(200, { "Content-Type": "application/json" });
   res.end(JSON.stringify(await get_township_rows_names()));
 });
+routes.get("GET").set("/sorted/villages", async (req, res) => {
+  console.log("GET req params", req.params);
+  const data = await sorting(req.params);
+  // console.log(data);
+  if (data) {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(data));
+  } else {
+    res.writeHead(400, { 'Content-Type': 'text/plain' });
+    res.end('Bad Request: Invalid method or endpoint.');
+  }
+})

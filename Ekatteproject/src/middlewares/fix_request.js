@@ -7,7 +7,8 @@ function fix_request(req, res, next) {
   req.path = url.pathname;
   req.query = Object.fromEntries(url.searchParams);
   req.rawQuery = url.search;
-  
+  req.params = getQueryParams(url);
+
   console.log("Clean request:", req.path, req.query);
 
   next();
