@@ -13,7 +13,7 @@ async function getStatistics() {
     township_count: await get_township_rows_count(),
     cityhalls_count: await get_cityhall_rows_count(),
   };
-  console.log(tableStatistics);
+  // console.log(tableStatistics);
   if (
     tableStatistics.village_count == null ||
     tableStatistics.district_count == null ||

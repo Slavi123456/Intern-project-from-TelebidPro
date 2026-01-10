@@ -1,5 +1,5 @@
 import { parse_names_from_village_text } from "../../src/utils/villageParser.js";
-import { assertThrows, assertWithMessage } from "./test_utils.js";
+import { assertThrows, assertWithMessage } from "../middleware/test_utils.js";
 
 // export {test_parsing_village_test}
 

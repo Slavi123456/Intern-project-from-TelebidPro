@@ -12,11 +12,11 @@ vi.mock("../src/controllers/queries.js", () => ({
 }));
 
 import { serve_static_files } from "../src/services/static_files.js";
-import {
-  fill_tables,
-  data_load,
-  village_query_handler,
-} from "../src/services/queries.js";
+// import {
+//   fill_tables,
+//   data_load,
+//   village_query_handler,
+// } from "../src/services/queries.js";
 // import { data_load } from "../src/controllers/queries.js";
 // import { village_query_handler } from "../src/controllers/queries.js";
 

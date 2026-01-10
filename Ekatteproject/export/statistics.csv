@@ -1,3 +1,9 @@
-id,name,name_en
-1,Village1,Village1EN
-2,Village2,Village2EN
+Table,Count rows
+village_count,166
+district_count,28
+township_count,265
+cityhalls_count,3155
+--- EXPORT STATISTICS ---
+Execution time (ms),33.5886
+Memory used (MB),0.03
+CPU used (ms),0.00

@@ -4,14 +4,22 @@ import { select_id_query_from_township } from "./township.js";
 import { validateMany } from "../utils/validation.js";
 import { withErrorHandling } from "../utils/errorHandling.js";
 import dotenv from "dotenv";
-import client from "../config/db.js"
+import client from "../config/db.js";
 
-export { safe_get_village_values, get_village_rows_count, get_villages_info, 
-  get_all_village_rows, get_village_id, update_village, get_biggest_village_id,
-  insert_row_into_village, delete_village_row};
+export {
+  safe_get_village_values,
+  get_village_rows_count,
+  get_villages_info,
+  get_all_village_rows,
+  get_village_id,
+  update_village,
+  get_biggest_village_id,
+  insert_row_into_village,
+  delete_village_row,
+};
 
 //Somehow to be exported only on test environment
-export { get_ids_from_queries, get_ids_from_text, get_village_values}
+export { get_ids_from_queries, get_ids_from_text, get_village_values };
 
 dotenv.config();
 
@@ -32,10 +40,7 @@ async function get_ids_from_text(text) {
   // if(!values) throw new ;
   // console.log(JSON.stringify(values));
 
-  const ids = await get_ids_from_queries(
-    values.township,
-    values.district,
-  );
+  const ids = await get_ids_from_queries(values.township, values.district);
   // console.log(ids);
   return ids;
 }
@@ -134,7 +139,7 @@ async function get_villages_info({ bgName, enName }) {
 }
 
 async function get_all_village_rows() {
-   let sql = `
+  let sql = `
     SELECT 
         V.id,
         V.name,
@@ -163,39 +168,49 @@ async function get_village_id(village_name) {
   return id_res.rows[0]?.id;
 }
 
-
-async function update_village(village_id, new_info){
-  const {name, name_en, township_id, district_id} = new_info;
+async function update_village(village_id, new_info) {
+  const { name, name_en, township_id, district_id } = new_info;
 
   const res = await client.query(
     `UPDATE villages
     SET name = $1, name_en = $2, township_id = $3, district_id = $4
     WHERE id = $5;`,
-    [name,name_en,township_id,district_id, village_id]
+    [name, name_en, township_id, district_id, village_id]
   );
   console.log(res.rows);
   // return res.rows;
 }
 
 async function get_biggest_village_id() {
-  const res = await client.query(`SELECT id FROM villages ORDER BY id DESC LIMIT 1;`);
+  const res = await client.query(
+    `SELECT id FROM villages ORDER BY id DESC LIMIT 1;`
+  );
   // console.log('rows', res.rows[0], res.rows[0]?.id);
   return res.rows[0]?.id;
 }
 
 async function insert_row_into_village(newVillage) {
-  const {id, name, name_en, township_id, district_id} = newVillage;
-  console.log(id,name, name_en, township_id, district_id);
+  const { id, name, name_en, township_id, district_id } = newVillage;
+  console.log(id, name, name_en, township_id, district_id);
   const sql = ` INSERT INTO villages(id, name, name_en, township_id, district_id) 
                   VALUES($1, $2, $3, $4, $5); --ON CONFLICT DO NOTHING RETURNING *;`;
 
-  const res = await client.query(sql, [id,name,name_en, township_id, district_id]);
-  console.log('rows', res.rows);
+  const res = await client.query(sql, [
+    id,
+    name,
+    name_en,
+    township_id,
+    district_id,
+  ]);
+  console.log("rows", res.rows);
   // return res.rows[];
 }
 
 async function delete_village_row(villageId) {
-  const res = await client.query(`DELETE FROM villages WHERE id = $1 RETURNING *;`, [villageId]);
-  console.log('DELETE rows', res);
-  return res.rowCount > 0;
+  const res = await client.query(
+    `DELETE FROM villages WHERE id = $1 RETURNING *;`,
+    [villageId]
+  );
+  // console.log("DELETE rows", res);
+  return res.rows;
 }

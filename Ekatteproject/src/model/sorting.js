@@ -24,7 +24,7 @@ async function sorting(sortArguments) {
     if (nameEN === 'ASC' || nameEN === 'DESC') orderClauses.push(`V.name_en ${nameEN}`);
     if (district === 'ASC' || district === 'DESC') orderClauses.push(`D.name ${district}`);
     if (township === 'ASC' || township === 'DESC') orderClauses.push(`T.name ${township}`);
-    if (cityhall === 'ASC' || cityhall === 'DESC') orderClauses.push(`(SELECT name FROM cityhall C WHERE C.township_id = T.id LIMIT 1) ${cityhall}`);
+    if (cityhall === 'ASC' || cityhall === 'DESC') orderClauses.push(`CityhallName ${cityhall}`);
 
     const ordering = orderClauses.length > 0 ? orderClauses.join(', ') : 'V.id ASC';
 

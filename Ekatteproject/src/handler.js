@@ -8,6 +8,7 @@ import "./controllers/get_controller.js";
 import "./controllers/post_controller.js";
 import "./controllers/put_controller.js";
 import "./controllers/delete_controller.js";
+import { BadRequestError, MethodNotAllowed } from "./errors/custom_error.js";
 
 export { handler };
 
@@ -32,20 +33,37 @@ function handler(req, res) {
 }
 
 async function routing_dispatcher(req, res) {
-  const methodRoutes = routes.get(req.method);
+  try {
+    const methodRoutes = routes.get(req.method);
+    
+    if (!methodRoutes) {
+      throw MethodNotAllowed("Method Not Allowed");
+    }
 
-  if (!methodRoutes) {
+    const handler = methodRoutes.get(req.pathname);
+
+    if (!handler) {
+      await serve_static_files(req, res, "public");
+      return;
+    }
+
+    await handler(req, res);
+  } catch (err) {
+    handle_errors(err);
+  }
+}
+
+async function handle_errors(err) {
+  if (err instanceof MethodNotAllowed) {
     res.writeHead(405);
     res.end("Method Not Allowed");
     return;
   }
-
-  const handler = methodRoutes.get(req.pathname);
-
-  if (!handler) {
-    await serve_static_files(req, res, "public");
+  if (err instanceof BadRequestError) {
+    res.writeHead(400, { 'Content-Type': 'text/plain' });
+    res.end('Bad Request:', err.message);
     return;
   }
-
-  await handler(req, res);
+  res.writeHead(500);
+  res.end("Internal server error:", err);
 }

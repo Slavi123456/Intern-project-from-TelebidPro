@@ -1,7 +1,9 @@
 export { parseJsonBody }
 
+const correctMethods = ["POST", "PUT", "PATCH", "DELETE"];
+
 function parseJsonBody(req, res, next) {
-    if (!["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
+    if (!correctMethods.includes(req.method)) {
         return next();
     }
 
