@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
 
-import client from "../../src/config/db.js";
 import {
   get_district_rows_count,
   select_id_query_from_district,
@@ -11,6 +10,7 @@ vi.mock("../../src/config/db.js", () => ({
     query: vi.fn(),
   },
 }));
+import client from "../../src/config/db.js";
 
 describe("get_district_rows_count()", () => {
   it("check for success", async () => {
@@ -78,3 +78,17 @@ describe("select_id_query_from_district()", () => {
   // });
 
 });
+// async function get_district_rows_names() {
+//   const res = await client.query("SELECT id,name FROM district;");
+//   return res.rows;
+// }
+
+import { get_district_rows_names } from "../../src/model/district.js";
+describe("get_district_rows_names()", () => {
+  it("", async () => {
+    const testRows = [];
+    client.query.mockResolvedValue({rows: testRows});
+
+    expect(await get_district_rows_names()).toEqual(testRows);
+  })
+})

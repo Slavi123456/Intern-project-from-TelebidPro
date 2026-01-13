@@ -57,7 +57,9 @@ describe("Villages functions", () => {
     select_id_query_from_district.mockResolvedValue(null);
     select_id_query_from_township.mockResolvedValue(5);
 
-    const result = await expect(get_ids_from_queries("Township", "District")).rejects.instanceOf(Error);
+    const result = await expect(
+      get_ids_from_queries("Township", "District")
+    ).rejects.instanceOf(Error);
   });
 
   it("get_ids_from_text parses text and returns ids", async () => {
@@ -110,3 +112,122 @@ describe("Villages functions", () => {
     expect(result.rows[0].name).toBe("V");
   });
 });
+
+import { get_all_village_rows } from "../../src/model/village.js";
+describe("get_all_village_rows()", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  it("succesful getting all village rows", async () => {
+    const testRows = [];
+    client.query.mockResolvedValue({ rows: testRows });
+    expect(await get_all_village_rows()).toEqual(testRows);
+    expect(client.query).toBeCalledTimes(1);
+  });
+});
+
+import { get_village_id } from "../../src/model/village.js";
+describe("get_village_id()", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  it("succesful get village id", async () => {
+    const id = 3;
+    const testRows = [{ id: id }];
+    client.query.mockResolvedValue({ rows: testRows });
+    expect(await get_village_id()).toBe(id);
+    expect(client.query).toBeCalledTimes(1);
+  });
+});
+
+import { update_village } from "../../src/model/village.js";
+describe("update_village()", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  it("successful updating village query", async () => {
+    const testVillageId = 3;
+    const testVillage = {
+      name: "a",
+      name_en: "b",
+      township_id: "c",
+      village_id: "d",
+    };
+    const sql = `UPDATE villages
+    SET name = $1, name_en = $2, township_id = $3, district_id = $4
+    WHERE id = $5;`;
+
+    const testRows = [];
+    client.query.mockResolvedValue({ rows: testRows });
+    expect(await update_village(testVillageId, testVillage)).toEqual(testRows);
+    expect(client.query).toBeCalledTimes(1);
+    expect(client.query).toHaveBeenCalledWith(sql, [
+      testVillage.name,
+      testVillage.name_en,
+      testVillage.township_id,
+      testVillage.district_id,
+      testVillageId,
+    ]);
+  });
+});
+
+import { get_biggest_village_id } from "../../src/model/village.js";
+describe("get_biggest_village_id()", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  it("succesfuly extracting biggest id", async () => {
+    const id = 3;
+    const testRows = [{ id: id }];
+    client.query.mockResolvedValue({ rows: testRows });
+    expect(await get_biggest_village_id()).toBe(id);
+    expect(client.query).toBeCalledTimes(1);
+  });
+});
+
+import { insert_row_into_village } from "../../src/model/village.js";
+describe("insert_row_into_village()", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  it("", async () => {
+    const testVillage = {
+      id: "123",
+      name: "a",
+      name_en: "b",
+      township_id: "c",
+      village_id: "d",
+    };
+    const sql = ` INSERT INTO villages(id, name, name_en, township_id, district_id)
+                  VALUES($1, $2, $3, $4, $5); --ON CONFLICT DO NOTHING RETURNING *;`;
+    const testRows = [];
+    client.query.mockResolvedValue({ rows: testRows });
+    expect(await insert_row_into_village(testVillage)).toEqual(testRows);
+    expect(client.query).toBeCalledTimes(1);
+  });
+});
+
+import { delete_village_row } from "../../src/model/village.js";
+describe("delete_village_row", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  it("deletes a village by id and returns rows", async () => {
+    const villageId = 5;
+    const mockRows = [{ id: villageId, name: "Test Village" }];
+
+    client.query.mockResolvedValue({
+      rows: mockRows,
+    });
+
+    const result = await delete_village_row(villageId);
+
+    expect(client.query).toHaveBeenCalledTimes(1);
+    expect(client.query).toHaveBeenCalledWith(
+      `DELETE FROM villages WHERE id = $1 RETURNING *;`,
+      [villageId]
+    );
+    expect(result).toEqual(mockRows);
+  });
+});
+

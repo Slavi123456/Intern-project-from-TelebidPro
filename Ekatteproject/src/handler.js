@@ -9,6 +9,7 @@ import "./controllers/post_controller.js";
 import "./controllers/put_controller.js";
 import "./controllers/delete_controller.js";
 import { BadRequestError, MethodNotAllowed } from "./errors/custom_error.js";
+import { errorHandler } from "./errors/errorHandling.js";
 
 export { handler };
 
@@ -49,21 +50,6 @@ async function routing_dispatcher(req, res) {
 
     await handler(req, res);
   } catch (err) {
-    handle_errors(err);
+    errorHandler(err, res);
   }
-}
-
-async function handle_errors(err) {
-  if (err instanceof MethodNotAllowed) {
-    res.writeHead(405);
-    res.end("Method Not Allowed");
-    return;
-  }
-  if (err instanceof BadRequestError) {
-    res.writeHead(400, { 'Content-Type': 'text/plain' });
-    res.end('Bad Request:', err.message);
-    return;
-  }
-  res.writeHead(500);
-  res.end("Internal server error:", err);
 }

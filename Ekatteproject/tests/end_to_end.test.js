@@ -10,8 +10,7 @@ describe("Server Endpoints", () => {
   it('200 for a GET request to "/"', async () => {
     const response = await request(server).get("/");
     expect(response.status).toBe(200);
-    // You can also add further assertions to check the response body
-    // Example: expect(response.text).toContain('Expected Response Text');
+
   });
 
   it("should serve main.css on GET /main.css", async () => {

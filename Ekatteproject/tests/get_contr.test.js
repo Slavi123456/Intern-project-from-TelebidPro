@@ -1,17 +1,19 @@
 import { describe, it, vi, expect, beforeEach } from "vitest";
-import { get_controller } from "../src/controllers/get_controller.js";
+describe("")
 
-vi.mock("../src/controllers/static_files.js", () => ({
-  serve_static_files: vi.fn(),
-}));
+// import { get_controller } from "../src/controllers/get_controller.js";
 
-vi.mock("../src/controllers/queries.js", () => ({
-  data_load: vi.fn(),
-  fill_tables: vi.fn(),
-  village_query_handler: vi.fn(),
-}));
+// vi.mock("../src/controllers/static_files.js", () => ({
+//   serve_static_files: vi.fn(),
+// }));
 
-import { serve_static_files } from "../src/services/static_files.js";
+// vi.mock("../src/controllers/queries.js", () => ({
+//   data_load: vi.fn(),
+//   fill_tables: vi.fn(),
+//   village_query_handler: vi.fn(),
+// }));
+
+// import { serve_static_files } from "../src/services/static_files.js";
 // import {
 //   fill_tables,
 //   data_load,
@@ -20,21 +22,20 @@ import { serve_static_files } from "../src/services/static_files.js";
 // import { data_load } from "../src/controllers/queries.js";
 // import { village_query_handler } from "../src/controllers/queries.js";
 
-function createMockReq(pathname, method = "GET") {
-  return {
-    pathname,
-    method,
-  };
-}
+// function createMockReq(pathname, method = "GET") {
+//   return {
+//     pathname,
+//     method,
+//   };
+// }
 
-function createMockRes() {
-  const res = {};
-  res.statusCode = 200;
-  res.end = vi.fn();
-  res.writeHead = vi.fn();
-  return res;
-}
-describe("")
+// function createMockRes() {
+//   const res = {};
+//   res.statusCode = 200;
+//   res.end = vi.fn();
+//   res.writeHead = vi.fn();
+//   return res;
+// }
 // describe("get_controller integration tests", () => {
 //   beforeEach(() => {
 //     vi.clearAllMocks();

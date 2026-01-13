@@ -5,25 +5,34 @@ import { serve_static_files } from "../services/static_files.js";
 
 import { routes } from "../routes.js";
 import { sorting } from "../model/sorting.js";
-import { exportData } from "../services/exporting.js";
 import { bulk_inserts_from_json } from "../services/databese_inserts.js";
 import { getStatistics } from "../services/statistics.js";
+import { BadRequestError } from "../errors/custom_error.js";
+import { exportHandler } from "../handlers/exporting_handler.js";
 
 routes
   .get("GET")
   .set("/", (req, res) => serve_static_files(req, res, "public/main.html"));
 routes
   .get("GET")
-  .set("/main.css", (req, res) => serve_static_files(req, res, "public/assets/css"));
+  .set("/main.css", (req, res) =>
+    serve_static_files(req, res, "public/assets/css")
+  );
 routes
   .get("GET")
-  .set("/edit_data.css", (req, res) => serve_static_files(req, res, "public/assets/css"));
+  .set("/edit_data.css", (req, res) =>
+    serve_static_files(req, res, "public/assets/css")
+  );
 routes
   .get("GET")
-  .set("/main.js", (req, res) => serve_static_files(req, res, "public/assets/js"));
+  .set("/main.js", (req, res) =>
+    serve_static_files(req, res, "public/assets/js")
+  );
 routes
   .get("GET")
-  .set("/edit_data.js", (req, res) => serve_static_files(req, res, "public/assets/js"));
+  .set("/edit_data.js", (req, res) =>
+    serve_static_files(req, res, "public/assets/js")
+  );
 routes
   .get("GET")
   .set("/edit_data.html", (req, res) => serve_static_files(req, res, "public"));
@@ -57,43 +66,20 @@ routes.get("GET").set("/townships-names", async (req, res) => {
   res.end(JSON.stringify(await get_township_rows_names()));
 });
 routes.get("GET").set("/sorted/villages", async (req, res) => {
-  console.log("GET req params", req.params);
   const data = await sorting(req.params);
-  // console.log(data);
-  if (data) {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(data));
-  } else {
-    res.writeHead(400, { 'Content-Type': 'text/plain' });
-    res.end('Bad Request: Invalid method or endpoint.');
+  if (!data) {
+    throw new BadRequestError("Bad Request: Invalid method or endpoint.");
   }
-})
 
-routes.get("GET").set("/export/excel", async (req,res) => {
-  try {
-        const data = [
-            { id: 1, name: 'Village1', name_en: 'Village1EN' },
-            { id: 2, name: 'Village2', name_en: 'Village2EN' }
-        ];
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify(data));
+});
 
-        await exportData(req,res, data, 'xlsx');
-    } catch (err) {
-        console.error(err);
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end('Failed to generate Excel');
-    }
-})
-routes.get("GET").set("/export/csv", async (req,res) => {
-  try {
-        const data = [
-            { id: 1, name: 'Village1', name_en: 'Village1EN' },
-            { id: 2, name: 'Village2', name_en: 'Village2EN' }
-        ];
+routes.get("GET").set("/export/excel", async (req, res) => {
+  exportHandler(req, res, 'xlsx');
+});
+routes.get("GET").set("/export/csv", async (req, res) => {
+  exportHandler(req, res, 'csv');
+});
 
-        await exportData(req,res, data, 'csv');
-    } catch (err) {
-        console.error(err);
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end('Failed to generate Excel');
-    }
-})
+

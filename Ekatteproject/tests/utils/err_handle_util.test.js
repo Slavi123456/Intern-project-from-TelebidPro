@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { withErrorHandling } from "../../src/utils/errorHandling.js";
+import { withErrorHandling } from "../../src/errors/errorHandling.js";
 
 class FakeError extends Error {
   constructor(msg) {
@@ -50,11 +50,8 @@ describe("withErrorHandling", () => {
     await expect(wrapped()).rejects.toThrow("Async fail");
   });
 
-  // This test is for future-proofing if you implement "notRethrow"
   it("ignores errors if notRethrow=true (when implemented)", async () => {
     const fn = vi.fn().mockRejectedValue(new FakeError("Error"));
-
-    // Simulate the option (currently, your code ignores it)
     const wrapped = withErrorHandling(fn, { notRethrow: true });
 
     await expect(wrapped()).rejects.toThrow(FakeError);

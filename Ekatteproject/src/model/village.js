@@ -2,7 +2,7 @@ import { parse_names_from_village_text } from "../utils/villageParser.js";
 import { select_id_query_from_district } from "./district.js";
 import { select_id_query_from_township } from "./township.js";
 import { validateMany } from "../utils/validation.js";
-import { withErrorHandling } from "../utils/errorHandling.js";
+import { withErrorHandling } from "../errors/errorHandling.js";
 import dotenv from "dotenv";
 import client from "../config/db.js";
 
@@ -178,7 +178,7 @@ async function update_village(village_id, new_info) {
     [name, name_en, township_id, district_id, village_id]
   );
   console.log(res.rows);
-  // return res.rows;
+  return res.rows;
 }
 
 async function get_biggest_village_id() {
@@ -203,7 +203,7 @@ async function insert_row_into_village(newVillage) {
     district_id,
   ]);
   console.log("rows", res.rows);
-  // return res.rows[];
+  return res.rows;
 }
 
 async function delete_village_row(villageId) {

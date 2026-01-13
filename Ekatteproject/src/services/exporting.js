@@ -3,23 +3,8 @@ import { getStatistics } from "./statistics.js";
 
 export { exportData };
 
-const mimeTypes = {
-    csv: "text/csv",
-    xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-};
-
-async function exportData(req, res, data, extension) {
-    if (!mimeTypes[extension]) {
-        throw new Error("Invalid export format");
-    }
-
-    if (!Array.isArray(data) || data.length === 0) {
-        throw new Error("No data to export");
-    }
-
-    const startTime = process.hrtime.bigint();
-    const memStart = process.memoryUsage().heapUsed;
-    const cpuStart = process.cpuUsage();
+async function exportData(req, res, extension) {
+    const startStats = getProccessStatistics();
 
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Statistics");
@@ -32,37 +17,40 @@ async function exportData(req, res, data, extension) {
         sheet.addRow([key, value]);
     });
 
-    const endTime = process.hrtime.bigint();
-    const memEnd = process.memoryUsage().heapUsed;
-    const cpuEnd = process.cpuUsage(cpuStart);
+    const endStats = getProccessStatistics();
 
-    const stats = {
-        executionTimeMs: Number(endTime - startTime) / 1e6,
-        memoryUsedMB: ((memEnd - memStart) / 1024 / 1024).toFixed(2),
-        cpuUsedMs: ((cpuEnd.user + cpuEnd.system) / 1000).toFixed(2),
-    };
+    const stats = calculateUsedProcessStats(startStats, endStats);
     console.log("->>[EXPORT]", stats);
 
-    res.setHeader("Content-Type", mimeTypes[extension]);
-    res.setHeader(
-        "Content-Disposition",
-        `attachment; filename="statistics.${extension}"`
-    );
-
     if (extension === "csv") {
-        sheet.addRow(["--- EXPORT STATISTICS ---"]);
-        sheet.addRow(["Execution time (ms)", stats.executionTimeMs]);
-        sheet.addRow(["Memory used (MB)", stats.memoryUsedMB]);
-        sheet.addRow(["CPU used (ms)", stats.cpuUsedMs]);
-
+        writeStatisticsToSheet(sheet, stats);
         await workbook.csv.write(res, { sheetName: "Statistics" });
-    } else {
+    } 
+    else if(extension === "xlsx") {
         const statsSheet = workbook.addWorksheet("Export Stats");
-        statsSheet.addRow(["Execution time (ms)", stats.executionTimeMs]);
-        statsSheet.addRow(["Memory used (MB)", stats.memoryUsedMB]);
-        statsSheet.addRow(["CPU used (ms)", stats.cpuUsedMs]);
-
+        writeStatisticsToSheet(statsSheet, stats);
         await workbook.xlsx.write(res);
     }
-    res.end();
+}
+function writeStatisticsToSheet(sheet, stats) {
+    sheet.addRow(["--- EXPORT STATISTICS ---"]);
+    sheet.addRow(["Execution time (ms)", stats.executionTimeMs]);
+    sheet.addRow(["Memory used (MB)", stats.memoryUsedMB]);
+    sheet.addRow(["CPU used (ms)", stats.cpuUsedMs]);
+}
+
+function getProccessStatistics() {
+    return {
+        time: process.hrtime.bigint(),
+        memory: process.memoryUsage().heapUsed,
+        cpuUsage: process.cpuUsage(),
+    };
+}
+
+function calculateUsedProcessStats(startStats, endStats) {
+    return {
+        executionTimeMs: Number(endStats.time - startStats.time) / 1e6,
+        memoryUsedMB: ((endStats.memory - startStats.memory) / 1024 / 1024).toFixed(2),
+        cpuUsedMs: ((endStats.cpuUsage.user + endStats.cpuUsage.system) / 1000).toFixed(2),
+    }
 }

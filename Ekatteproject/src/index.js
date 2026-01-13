@@ -12,7 +12,16 @@ const port = process.env.PORT;
 
 ////Creating server
 const server = http.createServer(async (req, res) => {
-  handler(req, res);
+   try {
+    await handler(req, res);
+  } catch (err) {
+    console.error("Request error:", err);
+
+    if (!res.headersSent) {
+      res.statusCode = 500;
+      res.end("Internal Server Error");
+    }
+  }
 });
 
 server.on("clientError", (err, socket) => {

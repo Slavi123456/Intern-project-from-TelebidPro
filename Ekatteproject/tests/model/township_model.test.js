@@ -75,3 +75,15 @@ describe("select_id_query_from_township()", () => {
   // });
 
 });
+
+
+
+import { get_township_rows_names } from "../../src/model/township.js";
+describe("get_district_rows_names()", () => {
+  it("", async () => {
+    const testRows = [];
+    client.query.mockResolvedValue({rows: testRows});
+
+    expect(await get_township_rows_names()).toEqual(testRows);
+  })
+})
