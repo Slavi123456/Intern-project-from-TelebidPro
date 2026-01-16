@@ -9,6 +9,7 @@ const mimeTypes = {
   ".css": "text/css",
   ".js": "application/javascript",
   ".json": "application/json",
+  ".yaml": "application/yaml",
 };
 
 async function serve_static_files(req, res, folder) {
@@ -22,7 +23,7 @@ async function serve_static_files(req, res, folder) {
     console.log(filePath);
     // console.log(urlPath, "\n", filePath, "\n", ext, "\n", contentType);
     const data = await fs.readFile(filePath);
-    res.writeHead(200, { "Content-Type": contentType });
+    res.writeHead(200, { "Content-Type": contentType, "Access-Control-Allow-Origin": "*", });
     res.end(data);
   } catch (err) {
     res.writeHead(404);
