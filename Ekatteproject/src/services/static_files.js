@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs/promises";
-import { __projectdir } from "../config/paths.js";
+import { __projectdir } from "../paths.js";
 
 export {serve_static_files};
 
@@ -26,6 +26,8 @@ async function serve_static_files(req, res, folder) {
     res.writeHead(200, { "Content-Type": contentType, "Access-Control-Allow-Origin": "*", });
     res.end(data);
   } catch (err) {
+    console.log("dsadadsa")
+
     res.writeHead(404);
     res.end(`${req.url} not found`);
   }

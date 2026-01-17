@@ -1,7 +1,7 @@
 import http from "http";
 import dotenv from "dotenv";
 import { handler } from "./handler.js";
-import "./routes.js";
+import "./config/routes.js";
 
 ("use strict");
 
