@@ -1,124 +1,458 @@
 openapi: 3.0.3
 info:
-  title: Board Game Club API
+  title: Ekatteproject
   version: 1.0.0
   description: |
-    This API allows clients to view events, games, and members of a board game club.
-    It supports listing events, retrieving game details, and registering new members.
+    Този проект зарежда и вкарва данни от официалните **ЕКАТТЕ** файлове, 
+    предоставени от Националния статистически институт ([NSI EKATTE](https://www.nsi.bg/nrnm/ekatte/index)), 
+    в **PostgreSQL** база данни. Освен това предоставя уеб интерфейс за търсене,създаване,триене и 
+    обновяване на информация за селища. С възможностите да се сортират по колони и да се изтегля статистика 
+    с текущия брой селища, общини, кметства и области.
+
+    ## Основни технологии
+
+    - **Docker** – За контейнеризация на базите данни, в които ще се съхранява информацията.
+    - **Node.js** – За backend логиката.
+      - **Vitest** - Използва се за писане на unit тестове.
+      - **Supertest** - за integration тестове съвместно с Vitest
+      - **Nodemon** - Автоматично презарежда приложението при промяна в кода.
+      - **Dotenv** - Зарежда environment променливи от .env файл
+      - **Exceljs** - За извеждане на статистиките в CSV формат и XLSX за Microsoft Excel
+    - **PostgreSQL** – За комуникация между backend-а и базите данни.
 
 servers:
   - url: http://localhost:8000
-    description: Local development server
+    description: Локално програмиран сървър
 
 paths:
-  /events:
+  paths:
+  /api/init:
     get:
-      summary: Get all upcoming events
-      description: Returns a list of all scheduled events at the club.
+      summary: Инициализация на базите данни
+      description: |
+        Извиква функцията bulk_inserts_from_json за първоначално попълване на данните.
       responses:
         "200":
-          description: A JSON array of events
+          description: Данните са инициализирани успешно
+        "500":
+          description: Възникна грешка при инициализацията
+
+  /api/villages:
+    get:
+      summary: Връща всички селища
+      description: Извлича всички редове от таблицата Villages.
+      responses:
+        "200":
+          description: Успешно получени данни
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Event"
+                  $ref: "#/components/schemas/Village"
+        "400":
+          description: Грешка при заявката
 
-  /events/{id}:
+  /api/init-statistics:
     get:
-      summary: Get a single event
-      description: Returns details of a single event identified by ID.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Numeric ID of the event to get
-          schema:
-            type: integer
+      summary: Връща статистики за таблиците
+      description: Извиква getStatistics и връща информация за брой редове и други статистики.
       responses:
         "200":
-          description: Event found
+          description: Успешно получени статистики
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Event"
-        "404":
-          description: Event not found
+                type: object
+        "500":
+          description: Грешка при изчисляването на статистиките
 
-  /members:
+  /search/villages:
+    get:
+      summary: Търсене на селища
+      description: Връща информация за селища според подадените query параметри.
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Име на селището за търсене
+        - in: query
+          name: township_id
+          schema:
+            type: string
+          description: Филтър по община
+        - in: query
+          name: district_id
+          schema:
+            type: string
+          description: Филтър по област
+      responses:
+        "200":
+          description: Успешно получени резултати
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Village"
+        "400":
+          description: Невалидни параметри на заявката
+
+  /districts-names:
+    get:
+      summary: Връща имената на областите
+      description: Връща списък с всички имена на области от таблицата District.
+      responses:
+        "200":
+          description: Успешно получени данни
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /townships-names:
+    get:
+      summary: Връща имената на общините
+      description: Връща списък с всички имена на общини от таблицата Township.
+      responses:
+        "200":
+          description: Успешно получени данни
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /sorted/villages:
+    get:
+      summary: Сортиране на селища
+      description: Връща сортираните селища според подадените параметри. Ако параметрите са невалидни, връща грешка.
+      parameters:
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+          description: Името на колоната за сортиране
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Редът на сортиране (възходящ/низходящ)
+      responses:
+        "200":
+          description: Успешно сортирани данни
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Village"
+        "400":
+          description: Невалидни параметри
+
+  /export/excel:
+    get:
+      summary: Експорт в Excel
+      description: Връща данните за селища в XLSX формат.
+      responses:
+        "200":
+          description: Файлът е генериран успешно
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+
+  /export/csv:
+    get:
+      summary: Експорт в CSV
+      description: Връща данните за селища в CSV формат.
+      responses:
+        "200":
+          description: Файлът е генериран успешно
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+
+  /api/create-data:
     post:
-      summary: Add a new member
-      description: Register a new member in the club.
+      summary: Създаване на ново селище
+      description: >
+        Създава ново селище. Handlerът първо взема последното ID от таблица
+        Villages, извлича district_id и township_id по изпратените имена,
+        и след това добавя ред в таблицата чрез insert_row_into_village.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/NewMember"
+              $ref: "#/components/schemas/CreateVillageRequest"
       responses:
-        "201":
-          description: Member created successfully
+        "200":
+          description: Селището е създадено успешно
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: "#/components/schemas/Member"
+                type: string
+                example: "Request was successful"
         "400":
-          description: Invalid request
+          description: Невалидни данни
+        "422":
+          description: Липсващо задължително поле или невалиден input
+
+  /api/edit-data:
+    put:
+      summary: Редактиране на селище
+      description:
+        Извиква конкретния handler "updateVillageHandler", който на свой
+        ред извиква функцията "update_village" за изтриване на селище
+        от src/model/village.js
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateVillageRequest"
+      responses:
+        "200":
+          description: Селището е редактирано успешно
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Request was successful"
+        "400":
+          description: Невалидни данни
+
+  /api/delete-data:
+    delete:
+      summary: Изтриване на селище
+      description:
+        Извиква конкретния handler, който на свой ред извиква функцията
+        "delete_village_row" за изтриване на селище от src/model/village.js
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: ID на селището за изтриване
+                  example: "00101"
+      responses:
+        "200":
+          description: Селището е изтрито успешно
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Request was successful"
+        "404":
+          description: Селището не е намерено
 
 components:
   schemas:
-    Event:
+    UpdateVillageRequest: # за PUT request
       type: object
       properties:
         id:
-          type: integer
-          description: Unique identifier for the event
-        type:
           type: string
-          description: Type of the event (e.g., tournament, meetup)
-        title:
+        name:
           type: string
-          description: Name of the event
-        time:
+        name_en:
           type: string
-          format: time
-          description: Start time of the event
-        day:
+        township_name:
           type: string
-          description: Day of the week
+        district_name:
+          type: string
       required:
         - id
-        - type
-        - title
-        - time
-        - day
+        - name
+        - name_en
+        - township_name
+        - district_name
 
-    Member:
+    CreateVillageRequest:
       type: object
+      description: Заявка за създаване на селище
       properties:
-        username:
+        name:
           type: string
-          description: Member’s username
-        role:
+          description: Име на селището на български
+          example: "София-център-Село"
+        name_en:
           type: string
-          description: Role in the club (organizer, player)
-        favoriteGame:
+          description: Име на селището на английски
+          example: "Sofia Center Village"
+        township_name:
           type: string
-          description: Favorite board game
+          description: Име на общината
+          example: "София-център"
+        district_name:
+          type: string
+          description: Име на областта
+          example: "София"
       required:
-        - username
-        - role
+        - name
+        - name_en
+        - township_name
+        - district_name
 
-    NewMember:
+    District:
       type: object
+      description: Области
       properties:
-        username:
+        id:
           type: string
-        role:
+          description: Уникален код за идентификация
+          minLength: 3
+          maxLength: 3
+          example: "001"
+        name:
           type: string
-        favoriteGame:
+          description: Име на областта на български
+          maxLength: 25
+          example: "София"
+        name_en:
           type: string
+          description: Име на областта на английски
+          maxLength: 25
+          example: "Sofia"
+        center_id:
+          type: string
+          description: Код на областния център
+          minLength: 5
+          maxLength: 5
+          example: "00101"
       required:
-        - username
-        - role
+        - id
+        - name
+        - name_en
+        - center_id
+
+    Township:
+      type: object
+      description: Общини
+      properties:
+        id:
+          type: string
+          description: Уникален код за идентификация (district_id + код)
+          minLength: 5
+          maxLength: 5
+          example: "00101"
+        name:
+          type: string
+          description: Име на общината на български
+          maxLength: 25
+          example: "София-център"
+        name_en:
+          type: string
+          description: Име на общината на английски
+          maxLength: 25
+          example: "Sofia Center"
+        district_id:
+          type: string
+          description: Код на областта
+          minLength: 3
+          maxLength: 3
+          example: "001"
+        center_id:
+          type: string
+          description: Код на общинския център
+          minLength: 5
+          maxLength: 5
+          example: "00101"
+        district:
+          $ref: "#/components/schemas/District"
+      required:
+        - id
+        - name
+        - name_en
+        - district_id
+        - center_id
+
+    Village:
+      type: object
+      description: Селища
+      properties:
+        id:
+          type: string
+          description: Уникален код за идентификация
+          minLength: 5
+          maxLength: 5
+          example: "00101"
+        name:
+          type: string
+          description: Име на селището на български
+          maxLength: 70
+          example: "София-център-Село"
+        name_en:
+          type: string
+          description: Име на селището на английски
+          maxLength: 70
+          example: "Sofia Center Village"
+        township_id:
+          type: string
+          description: Код на общината
+          minLength: 5
+          maxLength: 5
+          example: "00101"
+        district_id:
+          type: string
+          description: Код на областта
+          minLength: 3
+          maxLength: 3
+          example: "001"
+        township:
+          $ref: "#/components/schemas/Township"
+        district:
+          $ref: "#/components/schemas/District"
+      required:
+        - id
+        - name
+        - name_en
+        - township_id
+        - district_id
+
+    Cityhall:
+      type: object
+      description: Кметства
+      properties:
+        id:
+          type: string
+          description: Уникален код за идентификация (township_id + код)
+          minLength: 8
+          maxLength: 8
+          example: "00101001"
+        name:
+          type: string
+          description: Име на кметството на български
+          maxLength: 25
+          example: "София-център-Кметство"
+        name_en:
+          type: string
+          description: Име на кметството на английски
+          maxLength: 25
+          example: "Sofia Center Cityhall"
+        township_id:
+          type: string
+          description: Код на общината
+          minLength: 5
+          maxLength: 5
+          example: "00101"
+        township:
+          $ref: "#/components/schemas/Township"
+      required:
+        - id
+        - name
+        - name_en
+        - township_id

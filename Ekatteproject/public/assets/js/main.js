@@ -54,6 +54,9 @@ document.getElementById("createRowBtn").addEventListener("click", function () {
   window.location.href = "/edit_data.html?mode=create";
 
 });
+document.getElementById("documentation").addEventListener("click", function () {
+  window.location.href = "/docs";
+});
 document.getElementById("exportCSV").addEventListener("click", async function () {
   console.log("Export for csv!");
   fetch("/export/csv")
@@ -66,7 +69,6 @@ document.getElementById("exportCSV").addEventListener("click", async function ()
       a.click();
       window.URL.revokeObjectURL(url);
     });
-
 });
 document.getElementById("exportXLSX").addEventListener("click", function () {
   console.log("Export for xlsx!");

@@ -1,5 +1,5 @@
 import { deleteVillageHandler } from "../handlers/delete_village_handler.js";
-import { routes } from "../routes.js";
+import { routes } from "../config/routes.js";
 
 routes.get("DELETE").set("/api/delete-data", async (req, res) => {
   await deleteVillageHandler(req.body);

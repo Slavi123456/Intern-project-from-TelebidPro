@@ -3,7 +3,7 @@ import { loggerMiddleware } from "./middlewares/logger.js";
 import { parseJsonBody } from "./middlewares/parse_json.js";
 import { serve_static_files } from "./services/static_files.js";
 
-import { routes } from "./routes.js";
+import { routes } from "./config/routes.js";
 import "./controllers/get_controller.js";
 import "./controllers/post_controller.js";
 import "./controllers/put_controller.js";

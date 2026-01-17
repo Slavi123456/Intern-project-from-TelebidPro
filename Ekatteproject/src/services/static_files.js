@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs/promises";
-import { __projectdir } from "../paths.js";
+import { __projectdir } from "../config/paths.js";
 
 export {serve_static_files};
 
