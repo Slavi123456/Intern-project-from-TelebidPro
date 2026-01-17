@@ -211,6 +211,6 @@ async function delete_village_row(villageId) {
     `DELETE FROM villages WHERE id = $1 RETURNING *;`,
     [villageId]
   );
-  // console.log("DELETE rows", res);
+  // console.log("DELETE rows", res.rows, "Id", villageId);
   return res.rows;
 }

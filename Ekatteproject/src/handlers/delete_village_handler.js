@@ -3,11 +3,11 @@ import { delete_village_row } from "../model/village.js";
 
 export {deleteVillageHandler};
 
-async function deleteVillageHandler(id) {
-  if (!id) {
+async function deleteVillageHandler(reqBody) {
+  if (!reqBody.id) {
     throw new ValidationError("id is required");
   }
-  const rows = await delete_village_row(id);
+  let rows = await delete_village_row(reqBody.id);
 
   if (rows.length <= 0) {
     throw new NotFoundError("Village not found");
