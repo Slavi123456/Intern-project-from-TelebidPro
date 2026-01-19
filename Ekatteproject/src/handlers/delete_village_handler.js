@@ -4,8 +4,8 @@ import { delete_village_row } from "../model/village.js";
 export {deleteVillageHandler};
 
 async function deleteVillageHandler(reqBody) {
-  if (!reqBody.id) {
-    throw new ValidationError("id is required");
+  if (!reqBody || !reqBody.id) {
+    throw new ValidationError("Failed to process deleteVillageHandler");
   }
   let rows = await delete_village_row(reqBody.id);
 

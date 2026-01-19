@@ -1,7 +1,18 @@
 import path from "path";
 import fs from "fs/promises";
 
-export { bulkCreateDirectory };
+export { bulkCreateDirectory, readBookText };
+
+async function readBookText(folder) {
+  const files = await fs.readdir(folder);
+  const txtFile = files.find((f) => f.endsWith(".txt"));
+
+  if (!txtFile) throw new Error("No TXT file found in ZIP");
+
+  const content = await fs.readFile(path.join(folder, txtFile), "utf8");
+  return content;
+}
+
 
 async function bulkCreateDirectory(folder, directoryNames) {
   let newDirectories = [];

@@ -15,16 +15,16 @@ describe("deleteVillageHandler", () => {
 
   it("throws ValidationError if id is missing", async () => {
     await expect(deleteVillageHandler(undefined))
-      .rejects.toBeInstanceOf(ValidationError);
-
+      .rejects.toThrowError(ValidationError);
+    
     expect(delete_village_row).not.toHaveBeenCalled();
   });
 
   it("throws NotFoundError if no rows are deleted", async () => {
     delete_village_row.mockResolvedValue([]);
 
-    await expect(deleteVillageHandler(123))
-      .rejects.toBeInstanceOf(NotFoundError);
+    await expect(deleteVillageHandler({id: 123}))
+      .rejects.toThrowError(NotFoundError);
 
     expect(delete_village_row).toHaveBeenCalledWith(123);
   });
@@ -32,7 +32,7 @@ describe("deleteVillageHandler", () => {
   it("returns true when village is deleted", async () => {
     delete_village_row.mockResolvedValue([{ id: 123 }]);
 
-    const result = await deleteVillageHandler(123);
+    const result = await deleteVillageHandler({ id: 123 });
 
     expect(result).toBe(true);
     expect(delete_village_row).toHaveBeenCalledWith(123);

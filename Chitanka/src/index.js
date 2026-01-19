@@ -20,6 +20,7 @@ async function main() {
     const statistics = processStatistics(dataInfo);
     console.log(statistics);
   } catch (error) {
+    console.log(error);
     disconnectFromDatabase();
   }
 }

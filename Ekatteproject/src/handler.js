@@ -50,6 +50,6 @@ async function routing_dispatcher(req, res) {
 
     await handler(req, res);
   } catch (err) {
-    // errorHandler(err, res);
+    errorHandler(err, res);
   }
 }

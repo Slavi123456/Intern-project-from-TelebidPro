@@ -10,7 +10,7 @@ import { describe, vi, it, expect } from "vitest";
 //   await fs.writeFile(outputPath, response.data);
 //   //   console.log("Downloaded ZIP:", outputPath);
 // }
-import { downloadZip } from "../src/services/download_services.js";
+import { downloadZip} from "../src/services/download_services.js";
 
 vi.mock("axios", () => ({
     default: {
