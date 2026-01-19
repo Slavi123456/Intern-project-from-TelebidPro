@@ -13,6 +13,10 @@ const port = process.env.PORT;
 ////Creating server
 const server = http.createServer(async (req, res) => {
    try {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
     await handler(req, res);
   } catch (err) {
     console.error("Request error:", err);

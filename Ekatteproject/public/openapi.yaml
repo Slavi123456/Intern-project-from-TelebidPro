@@ -83,20 +83,15 @@ paths:
       description: Връща информация за селища според подадените query параметри.
       parameters:
         - in: query
-          name: name
+          name: bgName
           schema:
             type: string
-          description: Име на селището за търсене
+          description: Име на селището на български език за търсене
         - in: query
-          name: township_id
+          name: enName
           schema:
             type: string
-          description: Филтър по община
-        - in: query
-          name: district_id
-          schema:
-            type: string
-          description: Филтър по област
+          description: Име на селището на английски език за търсене
       responses:
         "200":
           description: Успешно получени резултати
@@ -143,16 +138,41 @@ paths:
       description: Връща сортираните селища според подадените параметри. Ако параметрите са невалидни, връща грешка.
       parameters:
         - in: query
-          name: sortBy
+          name: id
           schema:
             type: string
-          description: Името на колоната за сортиране
+            enum: [ASC, DESC]
+          description: Сортиране по ID на селището (ASC - възходящо, DESC - низходящо)
         - in: query
-          name: order
+          name: nameBG
           schema:
             type: string
-            enum: [asc, desc]
-          description: Редът на сортиране (възходящ/низходящ)
+            enum: [ASC, DESC]
+          description: Сортиране по име на селището на български (ASC - възходящо, DESC - низходящо)
+        - in: query
+          name: nameEN
+          schema:
+            type: string
+            enum: [ASC, DESC]
+          description: Сортиране по име на селището на английски (ASC - възходящо, DESC - низходящо)
+        - in: query
+          name: district
+          schema:
+            type: string
+            enum: [ASC, DESC]
+          description: Сортиране по район (ASC - възходящо, DESC - низходящо)
+        - in: query
+          name: township
+          schema:
+            type: string
+            enum: [ASC, DESC]
+          description: Сортиране по община (ASC - възходящо, DESC - низходящо)
+        - in: query
+          name: cityhall
+          schema:
+            type: string
+            enum: [ASC, DESC]
+          description: Сортиране по кметство (ASC - възходящо, DESC - низходящо)
       responses:
         "200":
           description: Успешно сортирани данни
@@ -271,7 +291,7 @@ paths:
 
 components:
   schemas:
-    UpdateVillageRequest: # за PUT request
+    UpdateVillageRequest:
       type: object
       properties:
         id:
@@ -381,8 +401,6 @@ components:
           minLength: 5
           maxLength: 5
           example: "00101"
-        district:
-          $ref: "#/components/schemas/District"
       required:
         - id
         - name
@@ -422,10 +440,6 @@ components:
           minLength: 3
           maxLength: 3
           example: "001"
-        township:
-          $ref: "#/components/schemas/Township"
-        district:
-          $ref: "#/components/schemas/District"
       required:
         - id
         - name
@@ -459,8 +473,6 @@ components:
           minLength: 5
           maxLength: 5
           example: "00101"
-        township:
-          $ref: "#/components/schemas/Township"
       required:
         - id
         - name

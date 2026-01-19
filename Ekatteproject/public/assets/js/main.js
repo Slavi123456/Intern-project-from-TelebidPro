@@ -119,7 +119,7 @@ async function submid_handler(info) {
 
   const query = {};
 
-  if (bg == "" && en == "") return;
+  // if (bg == "" && en == "") return;
   if (bg !== "") query.bgName = bg;
   if (en !== "") query.enName = en;
 

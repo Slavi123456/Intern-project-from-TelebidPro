@@ -38,8 +38,8 @@ routes
   .set("/edit_data.html", (req, res) => serve_static_files(req, res, "public"));
 routes.get("GET").set("/api/init", async (req, res) => {
   await bulk_inserts_from_json();
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end("");
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Successfuly initialized the data");
 });
 routes.get("GET").set("/api/villages", async (req, res) => {
   res.writeHead(200, { "Content-Type": "application/json" });
