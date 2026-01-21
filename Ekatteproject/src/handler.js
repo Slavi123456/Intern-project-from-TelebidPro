@@ -36,19 +36,24 @@ function handler(req, res) {
 async function routing_dispatcher(req, res) {
   try {
     const methodRoutes = routes.get(req.method);
-    
+
     if (!methodRoutes) {
       throw MethodNotAllowed("Method Not Allowed");
     }
 
-    const handler = methodRoutes.get(req.pathname);
-
-    if (!handler) {
-      await serve_static_files(req, res, "public");
-      return;
+    if (methodRoutes.has(req.pathname)) {
+      const handler = methodRoutes.get(req.pathname);
+      return await handler(req, res);
     }
 
-    await handler(req, res);
+    // console.log("Method routes: ", methodRoutes.entries());
+    for (const [route, fn] of methodRoutes.entries()) {
+      if (req.url.startsWith("/assets/")) {
+        // console.log("Succes match, ", route, "fn ", fn);
+        return await fn(req, res);
+      }
+    }
+    return await serve_static_files(req, res, "public");
   } catch (err) {
     errorHandler(err, res);
   }

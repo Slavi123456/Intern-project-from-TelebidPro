@@ -296,14 +296,23 @@ components:
       properties:
         id:
           type: string
+          example: 99960
         name:
           type: string
+          description: Обновено име за селището на български
+          example: "Варна – Център"
         name_en:
           type: string
-        township_name:
+          description: Обновено име за селището на английски
+          example: "Varna Center"
+        township_id:
           type: string
-        district_name:
+          description: Код на общината пример за Аксакоово
+          example: "VAR02"
+        district_id:
           type: string
+          description: Код на областта пример за Варна
+          example: "VAR"
       required:
         - id
         - name
@@ -323,14 +332,14 @@ components:
           type: string
           description: Име на селището на английски
           example: "Sofia Center Village"
-        township_name:
+        township_id:
           type: string
-          description: Име на общината
-          example: "София-център"
-        district_name:
+          description: Код на общината пример за Варна - Аксакоово
+          example: "VAR02"
+        district_id:
           type: string
-          description: Име на областта
-          example: "София"
+          description: Код на областта пример за Варна
+          example: "VAR"
       required:
         - name
         - name_en

@@ -51,16 +51,13 @@ document
   .addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const townshipSelect = document.getElementById("township_id");
-    const districtSelect = document.getElementById("district_id");
-
     const data = {
       name: document.getElementById("name").value,
       name_en: document.getElementById("name_en").value,
-      township_name:
-        townshipSelect.options[townshipSelect.selectedIndex].text.trim(),
-      district_name:
-        districtSelect.options[districtSelect.selectedIndex].text.trim(),
+      township_id:
+        document.getElementById("township_id").value,
+      district_id:
+        document.getElementById("district_id").value,
     };
 
     try {
@@ -76,6 +73,7 @@ document
           body: JSON.stringify(data),
         });
       } else {
+        console.log(data);
         res = await fetch("/api/create-data", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

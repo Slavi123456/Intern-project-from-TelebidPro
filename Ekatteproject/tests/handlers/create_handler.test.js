@@ -51,46 +51,19 @@ describe("createVillageHandler()", () => {
         select_id_query_from_township.mockResolvedValue(2);
         insert_row_into_village.mockResolvedValue(true);
 
-        const id = await createVillageHandler({
+        const fake_village_data = {
             name: "Село",
             name_en: "Village",
-            township_name: "Township",
-            district_name: "District",
-        });
+            township_id: "VAR02",
+            district_id: "VAR",
+        };
+        const id = await createVillageHandler(fake_village_data);
 
         expect(id).toBe("00010");
 
         expect(insert_row_into_village).toHaveBeenCalledWith({
             id: "00010",
-            name: "Село",
-            name_en: "Village",
-            township_id: 2,
-            district_id: 1,
+            ...fake_village_data
         });
     });
 });
-// async function createVillageHandler(village) {
-//     if (!village) {
-//         throw new ValidationError("Village is reqired for creatingVillage");
-//     }
-//     const lastId = await get_biggest_village_id();
-//     const newId = String(parseInt(lastId, 10) + 1).padStart(5, "0");
-
-//     const { id, name, name_en, township_name, district_name } = village;
-//     if (!name || !name_en || !township_name || !district_name) {
-//         throw new ValidationError("Missing required field");
-//     }
-
-//     const district_id = await select_id_query_from_district(district_name);
-//     const township_id = await select_id_query_from_township(township_name);
-
-//     await insert_row_into_village({
-//         id: newId,
-//         name: name,
-//         name_en: name_en,
-//         township_id: township_id,
-//         district_id: district_id,
-//     });
-
-//     return newId;
-// }

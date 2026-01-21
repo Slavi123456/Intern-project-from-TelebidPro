@@ -1,9 +1,9 @@
 Table,Count rows
-village_count,165
+village_count,168
 district_count,28
 township_count,265
 cityhalls_count,3155
 --- EXPORT STATISTICS ---
-Execution time (ms),11.7001
-Memory used (MB),0.45
-CPU used (ms),890.00
+Execution time (ms),9.2473
+Memory used (MB),0.11
+CPU used (ms),6296.00

@@ -124,17 +124,17 @@ async function get_villages_info({ bgName, enName }) {
   const params = [];
   let count = 1;
   if (bgName !== undefined) {
-    sql += ` AND V.name = $${count}`;
+    sql += ` AND UPPER(V.name) = UPPER($${count})`;
     count++;
     params.push(bgName);
   }
 
   if (enName !== undefined) {
-    sql += ` AND V.name_en = $${count}`;
+    sql += ` AND UPPER(V.name_en) = UPPER($${count})`;
     count++;
     params.push(enName);
   }
-  // console.log(sql, params);
+  // console.log("SQL", sql);
   return await client.query(sql, params);
 }
 

@@ -9,30 +9,34 @@ import { bulk_inserts_from_json } from "../services/databese_inserts.js";
 import { getStatistics } from "../services/statistics.js";
 import { BadRequestError } from "../errors/custom_error.js";
 import { exportHandler } from "../handlers/exporting_handler.js";
+import { serveStaticFiles } from "../services/static_files.js";
 
+// routes
+//   .get("GET")
+//   .set("/assets/", serveStaticFiles);
 routes
   .get("GET")
   .set("/", (req, res) => serve_static_files(req, res, "public/main.html"));
-routes
-  .get("GET")
-  .set("/main.css", (req, res) =>
-    serve_static_files(req, res, "public/assets/css")
-  );
-routes
-  .get("GET")
-  .set("/edit_data.css", (req, res) =>
-    serve_static_files(req, res, "public/assets/css")
-  );
-routes
-  .get("GET")
-  .set("/main.js", (req, res) =>
-    serve_static_files(req, res, "public/assets/js")
-  );
-routes
-  .get("GET")
-  .set("/edit_data.js", (req, res) =>
-    serve_static_files(req, res, "public/assets/js")
-  );
+// routes
+//   .get("GET")
+//   .set("/main.css", (req, res) =>
+//     serve_static_files(req, res, "public/assets/css")
+//   );
+// routes
+//   .get("GET")
+//   .set("/edit_data.css", (req, res) =>
+//     serve_static_files(req, res, "public/assets/css")
+//   );
+// routes
+//   .get("GET")
+//   .set("/main.js", (req, res) =>
+//     serve_static_files(req, res, "public/assets/js")
+//   );
+// routes
+//   .get("GET")
+//   .set("/edit_data.js", (req, res) =>
+//     serve_static_files(req, res, "public/assets/js")
+//   );
 routes
   .get("GET")
   .set("/edit_data.html", (req, res) => serve_static_files(req, res, "public"));

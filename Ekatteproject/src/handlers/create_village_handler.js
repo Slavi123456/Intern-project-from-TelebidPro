@@ -15,14 +15,15 @@ async function createVillageHandler(village) {
     }
     const lastId = await get_biggest_village_id();
     const newId = String(parseInt(lastId, 10) + 1).padStart(5, "0");
-
-    const { id, name, name_en, township_name, district_name } = village;
-    if (!name || !name_en || !township_name || !district_name) {
+    // console.log("Village for creation ", village);
+    
+    const { name, name_en, township_id, district_id } = village;
+    if (!name || !name_en || !township_id || !district_id) {
         throw new ValidationError("Missing required field");
     }
 
-    const district_id = await select_id_query_from_district(district_name);
-    const township_id = await select_id_query_from_township(township_name);
+    // const district_id = await select_id_query_from_district(district_name);
+    // const township_id = await select_id_query_from_township(township_name);
 
     await insert_row_into_village({
         id: newId,

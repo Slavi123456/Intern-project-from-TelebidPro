@@ -84,7 +84,7 @@ document.getElementById("exportXLSX").addEventListener("click", function () {
     });
 });
 // null = not sorted, 'asc' = ascending, 'desc' = descending
-const sortStates = {
+let sortStates = {
   id: null,
   nameBG: null,
   nameEN: null,
@@ -107,6 +107,7 @@ document.querySelectorAll('th').forEach(th => {
     const data = await res.json();
 
     console.log("Sorted village data", data);
+    villageData = data;
     fill_table(data);
   });
 });

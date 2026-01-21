@@ -59,12 +59,12 @@ describe("Static routes", () => {
 //   });
 
   it("GET /main.css", async () => {
-    const res = await request(server).get("/main.css");
+    const res = await request(server).get("/assets/css/main.css");
     expect(res.status).toBe(200);
   });
 
   it("GET /main.js", async () => {
-    const res = await request(server).get("/main.js");
+    const res = await request(server).get("/assets/js/main.js");
     expect(res.status).toBe(200);
   });
 
