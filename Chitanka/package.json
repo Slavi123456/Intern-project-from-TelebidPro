@@ -5,10 +5,10 @@
   "license": "ISC",
   "author": "Stanislav Stamatov",
   "type": "module",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "vitest --coverage --config ./vitest.config.js",
-    "start": "node --env-file=.env  ./src/server.js",
+    "start": "node --env-file=.env  ./src/index.js",
     "dev": "nodemon --env-file=.env ./src/index.js"
   },
   "dependencies": {

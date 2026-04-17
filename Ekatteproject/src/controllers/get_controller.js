@@ -17,26 +17,26 @@ import { serveStaticFiles } from "../services/static_files.js";
 routes
   .get("GET")
   .set("/", (req, res) => serve_static_files(req, res, "public/main.html"));
-// routes
-//   .get("GET")
-//   .set("/main.css", (req, res) =>
-//     serve_static_files(req, res, "public/assets/css")
-//   );
-// routes
-//   .get("GET")
-//   .set("/edit_data.css", (req, res) =>
-//     serve_static_files(req, res, "public/assets/css")
-//   );
-// routes
-//   .get("GET")
-//   .set("/main.js", (req, res) =>
-//     serve_static_files(req, res, "public/assets/js")
-//   );
-// routes
-//   .get("GET")
-//   .set("/edit_data.js", (req, res) =>
-//     serve_static_files(req, res, "public/assets/js")
-//   );
+routes
+  .get("GET")
+  .set("/main.css", (req, res) =>
+    serve_static_files(req, res, "public/assets/css")
+  );
+routes
+  .get("GET")
+  .set("/edit_data.css", (req, res) =>
+    serve_static_files(req, res, "public/assets/css")
+  );
+routes
+  .get("GET")
+  .set("/main.js", (req, res) =>
+    serve_static_files(req, res, "public/assets/js")
+  );
+routes
+  .get("GET")
+  .set("/edit_data.js", (req, res) =>
+    serve_static_files(req, res, "public/assets/js")
+  );
 routes
   .get("GET")
   .set("/edit_data.html", (req, res) => serve_static_files(req, res, "public"));
